@@ -1,5 +1,6 @@
 package com.gunwook.jpeople.user.entity;
 
+import com.gunwook.jpeople.user.dto.SignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "nickname")
+    private String nickname;
+
     @Column(name = "introduction")
     private String introduction;
 
@@ -28,5 +32,15 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+
+
+    public User(SignUpRequestDto signUpRequestDto, String password, UserRoleEnum role){
+        this.username = signUpRequestDto.getUsername();
+        this.password = password;
+        this.nickname = signUpRequestDto.getNickname();
+        this.introduction = signUpRequestDto.getIntroduction();
+        this.role = role;
+
+    }
 
 }
