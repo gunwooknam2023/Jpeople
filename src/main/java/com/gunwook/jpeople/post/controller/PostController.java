@@ -70,6 +70,12 @@ public class PostController {
         return ResponseEntity.ok(postResponseDtos);
     }
 
+    /**
+     * 게시글 단건 조회
+     * @param userDetails 유저 정보
+     * @param post_id 게시글 아이디
+     * @return 게시글 정보
+     */
     @GetMapping("/posts/{post_id}")
     ResponseEntity<PostResponseDto> getPost(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                             @PathVariable Long post_id){
