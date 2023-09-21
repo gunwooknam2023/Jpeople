@@ -80,6 +80,7 @@ public class PostService {
         return postResponseDtos;
     }
 
+    @Transactional
     public PostResponseDto getPost(User user, Long postId) {
         // 권한 조회
         userRepository.findByUsername(user.getUsername()).orElseThrow(
@@ -91,6 +92,7 @@ public class PostService {
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
+        post.viewCnt();
         PostResponseDto postResponseDto = new PostResponseDto(post);
         return postResponseDto;
     }
