@@ -32,6 +32,9 @@ public class Post extends TimeStamped{
     @Column(name = "likes")
     private Long goodLike = 0L;
 
+    @Column(name = "view")
+    private Long viewCnt = 0L;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -60,5 +63,9 @@ public class Post extends TimeStamped{
 
     public void deleteLikePost(){
         this.goodLike--;
+    }
+
+    public void viewCnt(){
+        this.viewCnt++;
     }
 }

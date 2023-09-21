@@ -17,9 +17,11 @@ public class PostResponseDto {
     private Long user_id;
     private String username;
     private String nickname;
+    private Long like;
+    private Long viewCnt;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-    private Long like;
+
     private List<CommentResponseDto> commentResponseDtoList;
 
 
@@ -30,13 +32,15 @@ public class PostResponseDto {
         this.user_id = post.getUser().getId();
         this.username = post.getUser().getUsername();
         this.nickname = post.getUser().getNickname();
+        this.like = post.getGoodLike();
+        this.viewCnt = post.getViewCnt();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.commentResponseDtoList = post.getCommentList().stream()
                 .map(CommentResponseDto::new)
                 .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
                 .toList();
-        this.like = post.getGoodLike();
+
     }
 }
 
