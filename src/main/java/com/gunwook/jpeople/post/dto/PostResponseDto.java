@@ -19,7 +19,9 @@ public class PostResponseDto {
     private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+    private Long like;
     private List<CommentResponseDto> commentResponseDtoList;
+
 
     public PostResponseDto(Post post){
         this.id = post.getId();
@@ -34,6 +36,7 @@ public class PostResponseDto {
                 .map(CommentResponseDto::new)
                 .sorted(Comparator.comparing(CommentResponseDto::getCreatedAt).reversed())
                 .toList();
+        this.like = post.getGoodLike();
     }
 }
 
