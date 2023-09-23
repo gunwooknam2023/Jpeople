@@ -50,7 +50,7 @@ public class SchedulePostService {
         );
 
         if(!user.getId().equals(schedulePost.getUser().getId())){
-            throw new IllegalArgumentException("일정 작성자만 수정이 가능합니다.");
+            throw new IllegalArgumentException("일정 작성자만 삭제가 가능합니다.");
         }
 
         schedulePostRepository.delete(schedulePost);
