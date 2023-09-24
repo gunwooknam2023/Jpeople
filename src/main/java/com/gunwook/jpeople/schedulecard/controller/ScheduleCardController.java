@@ -92,6 +92,36 @@ public class ScheduleCardController {
         return ResponseEntity.ok(scheduleCardResponseDto);
     }
 
+    /**
+     * 완료 상태 ON
+     * @param userDetails 유저 정보
+     * @param card_id 처리할 카드 번호
+     * @return 완료 상태 처리 성공/실패 여부
+     */
+    @PostMapping("/schedules/card/health/t/{card_id}")
+    ResponseEntity<String> healthTrue(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                      @PathVariable long card_id){
+        String result = scheduleCardService.healthTrue(userDetails.getUser(), card_id);
+
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 완료 상태 OFF
+     * @param userDetails 유저 정보
+     * @param card_id 처리할 카드 번호
+     * @return 완료 상태 처리 성공/실패 여부
+     */
+    @PostMapping("/schedules/card/health/f/{card_id}")
+    ResponseEntity<String> healthFalse(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                      @PathVariable long card_id){
+        String result = scheduleCardService.healthFalse(userDetails.getUser(), card_id);
+
+        return ResponseEntity.ok(result);
+    }
+
+
+
 
 
 

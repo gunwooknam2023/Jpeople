@@ -95,4 +95,35 @@ public class ScheduleCardService {
 
         return scheduleCardResponseDto;
     }
+
+    @Transactional
+    public String healthTrue(User user, long cardId) {
+        userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 후 사용하세요.")
+        );
+
+        ScheduleCard scheduleCard = scheduleCardRepository.findById(cardId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 카드 입니다.")
+        );
+
+        scheduleCard.trueHealth();
+        return "카드가 완료 처리 되었습니다.";
+    }
+
+    @Transactional
+    public String healthFalse(User user, long cardId) {
+        userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 후 사용하세요.")
+        );
+
+        ScheduleCard scheduleCard = scheduleCardRepository.findById(cardId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 카드 입니다.")
+        );
+
+        scheduleCard.falseHealth();
+        return "카드가 미완료 처리 되었습니다.";
+
+    }
+
+
 }
