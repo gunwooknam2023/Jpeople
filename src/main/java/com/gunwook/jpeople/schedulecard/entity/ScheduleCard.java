@@ -1,5 +1,6 @@
 package com.gunwook.jpeople.schedulecard.entity;
 
+import com.gunwook.jpeople.common.TimeStamped;
 import com.gunwook.jpeople.schedulePost.entity.SchedulePost;
 import com.gunwook.jpeople.schedulecard.dto.ScheduleCardRequestDto;
 import com.gunwook.jpeople.user.entity.User;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 @Table(name = "schedulecards")
-public class ScheduleCard {
+public class ScheduleCard extends TimeStamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
