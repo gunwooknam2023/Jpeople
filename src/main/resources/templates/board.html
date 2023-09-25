@@ -31,15 +31,17 @@
 </div>
 
 <div class="bottom">
-    <div class="feature-container">
-    </div>
-    <div class="user-info-container">
         <!-- 유저 정보를 출력할 공간 -->
+        <div class="fixed-info">
+            <span class="info-item">제목</span>
+            <span class="info-item">닉네임</span>
+            <span class="info-item">작성시간</span>
+        </div>
         <div class="user-info-list">
             <div class="post-info">
-                <span class="info-item">제목</span>
-                <span class="info-item">닉네임</span>
-                <span class="info-item">작성시간</span>
+                <span class="info-item post-title">제목</span>
+                <span class="info-item post-nickname">닉네임</span>
+                <span class="info-item post-time">작성시간</span>
             </div>
             <!-- 여기에 각 페이지별로 유저 정보가 출력될 것입니다. -->
         </div>
@@ -48,10 +50,26 @@
             <!-- 페이지 번호 버튼들이 여기에 생성될 것입니다. -->
         </div>
     </div>
-</div>
+
 
 
 <script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbarLeft = document.querySelector('.navbar-left');
+
+        navbarLeft.addEventListener('mouseover', function() {
+            navbarLeft.style.color = '#FF5733'; // 원하는 색상으로 변경
+        });
+
+        navbarLeft.addEventListener('mouseout', function() {
+            navbarLeft.style.color = ''; // 마우스를 떼면 원래 색상으로 돌아감
+        });
+
+        navbarLeft.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    });
 
     const userPerPage = 15;
     const userInfoList = document.querySelector('.user-info-list');
@@ -64,6 +82,14 @@
     paginationContainer.addEventListener('click', event => {
         if (event.target.classList.contains('page-button')) {
             currentPage = parseInt(event.target.dataset.page);
+
+            const buttons = paginationContainer.querySelectorAll('.page-button');
+
+            // 모든 버튼에서 'active' 클래스를 제거합니다.
+            buttons.forEach(button => button.classList.remove('active'));
+
+            // 클릭된 페이지 버튼에 'active' 클래스를 추가합니다.
+            event.target.classList.add('active');
 
             renderPostsForPage(currentPage);
 
@@ -108,6 +134,11 @@
         for (let i = 1; i <= totalPages; i++) {
             const pageButton = document.createElement('button');
             pageButton.classList.add('page-button');
+
+            if (i === currentPage) {
+                pageButton.classList.add('active'); // 현재 페이지일 경우 'active' 클래스 추가
+            }
+
             pageButton.textContent = i;
             pageButton.dataset.page = i;
             paginationContainer.appendChild(pageButton);
