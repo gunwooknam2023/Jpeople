@@ -8,6 +8,7 @@ import com.gunwook.jpeople.user.entity.User;
 import com.gunwook.jpeople.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class PostService {
         );
 
         // 게시글 받아오기
-        List<Post> posts = postRepository.findAll();
+        List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
 
         for(Post post : posts){
