@@ -35,6 +35,10 @@ public class Post extends TimeStamped{
     @Column(name = "view")
     private Long viewCnt = 0L;
 
+    @Column(name = "category", nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private Category category;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -67,5 +71,15 @@ public class Post extends TimeStamped{
 
     public void viewCnt(){
         this.viewCnt++;
+    }
+
+    public void setCategoryBoard() {
+        this.category = Category.FREE_BOARD;
+    }
+    public void setCategoryNotification() {
+        this.category = Category.NOTIFICATION_BOARD;
+    }
+    public void setCategoryReport() {
+        this.category = Category.REPORT_BOARD;
     }
 }
