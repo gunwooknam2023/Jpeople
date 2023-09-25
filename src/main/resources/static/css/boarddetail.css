@@ -69,86 +69,12 @@
     cursor: pointer; /* 커서 모양을 포인터로 변경 */
 }
 
-.navbar-right a:nth-child(2) {
-    color: #000000; /* 더 진한 회색 */
+.content {
+    text-align: center; /* 중앙 정렬 */
+    max-width: 800px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 가운데 정렬을 위한 왼쪽, 오른쪽 마진을 자동으로 설정 */
 }
 
-
-.pagination {
-    font-size: 1.4em; /* 원하는 폰트 크기로 조절 */
-    justify-content: center;
-    position: fixed;
-    bottom: 120px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.pagination button.active {
-    background-color: #007bff;
-    color: #fff;
-    border: 1px solid #007bff;
-}
-
-.pagination button {
-    width: 1em;
-    height: 1em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.fixed-info, .post-info {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
-}
-
-.info-item {
-    flex: 1;
-    text-align: center;
-    font-size: 1.8rem;
-    max-width: 25%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin: 0 200px; /* 좌우 여백 조절 */
-}
-
-.post-title {
-    max-width: 150%;
-}
-
-.post-nickname {
-    max-width: 20%;
-}
-
-.post-time {
-    max-width: 100%;
-}
-
- /*수정된 코드 */
-.post-info .post-title a:link {
-    color: black; /* 링크가 방문하지 않았을 때의 색상 (검은색) */
-    text-decoration: none; /* 밑줄 제거 */
-    font-weight: bold; /* 글씨 강조 */
-}
-
-.post-info .post-title a:visited {
-    color: black; /* 링크가 방문했을 때의 색상 (검은색) */
-    font-weight: bold; /* 글씨 강조 */
-}
-
-.post-info .post-title a:hover {
-    color: blue; /* 링크에 마우스를 올렸을 때의 색상 (검은색) */
-    font-weight: bold; /* 글씨 강조 */
-    cursor: pointer; /* 커서 모양을 포인터로 변경 */
-}
-
-.post-info .post-title a:active {
-    color: black; /* 링크를 클릭했을 때의 색상 (검은색) */
-    font-weight: bold; /* 글씨 강조 */
+.content div {
+    font-size: 3.5em; /* 글씨 크기 조절 */
 }
