@@ -36,5 +36,10 @@ public class ViewController {
         return "boarddetail";
     }
 
+    @GetMapping("/createboard")
+    public String createboard(){
+        return "createboard";
+    }
+
 
 }

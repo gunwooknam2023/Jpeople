@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나의 프로젝트</title>
+  <link rel="stylesheet" href="/css/createboard.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+
+<!-- 상단바 -->
+<div class="navbar">
+  <div class="navbar-left">
+    J PEOPLE
+  </div>
+  <div class="navbar-right">
+    <a href="/api/view/notification">공지사항</a>
+    <a href="/api/view/board">자유게시판</a>
+    <a href="/api/view/schedule">일정관리</a>
+    <a href="/api/view/mypage">마이페이지</a>
+  </div>
+</div>
+
+<div class="form-container">
+<div class="mb-3">
+  <label for="titleInput" class="form-label"></label>
+  <input type="email" class="form-control form-control-custom" id="titleInput" placeholder="제목">
+</div>
+
+<div class="mb-3">
+  <label for="contentsInput" class="form-label"></label>
+  <textarea class="form-control textarea-custom" id="contentsInput" placeholder="내용" rows="3"></textarea>
+</div>
+</div>
+
+<div class="button-container">
+<button type="button" class="btn btn-secondary" onclick="postCancel()">취소</button>
+  <button type="button" class="btn btn-success" onclick="postBoard()">작성</button>
+</div>
+
+<!-- 페이지 내용 (중앙 부분) -->
+<!-- 여기에 내용 추가 -->
+
+<!-- 하단바 -->
+<div class="footer">
+  대표: 남건욱
+</div>
+
+<script>
+
+  function postBoard() {
+    var postRequestDto = {
+      title: document.getElementById('titleInput').value,
+      contents: document.getElementById('contentsInput').value
+    };
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/posts', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function () {
+      if (xhr.status >= 200 && xhr.status < 400) {
+        var responseText = xhr.responseText;
+        console.log(responseText); // 응답 문자열 출력
+        if (responseText === "게시글이 생성되었습니다.") {
+          window.location.href = '/api/view/board';
+        }
+      } else {
+        console.error('Error:', xhr.status, xhr.statusText);
+      }
+    };
+    xhr.onerror = function () {
+      console.error('Network Error');
+    };
+    xhr.send(JSON.stringify(postRequestDto));
+  }
+
+
+
+  function postCancel() {
+    window.location.href = '/api/view/board';
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const navbarLeft = document.querySelector('.navbar-left');
+
+    navbarLeft.addEventListener('mouseover', function() {
+      navbarLeft.style.color = '#FF5733'; // 원하는 색상으로 변경
+    });
+
+    navbarLeft.addEventListener('mouseout', function() {
+      navbarLeft.style.color = ''; // 마우스를 떼면 원래 색상으로 돌아감
+    });
+
+    navbarLeft.addEventListener('click', function() {
+      window.location.href = '/';
+    });
+  });
+</script>
+
+</body>
+</html>
