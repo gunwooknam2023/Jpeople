@@ -30,4 +30,11 @@ public class ViewController {
     public String mypagePage(){
         return "mypage";
     }
+
+    @GetMapping("/boarddetail")
+    public String boardDetail(){
+        return "boarddetail";
+    }
+
+
 }

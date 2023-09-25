@@ -164,7 +164,9 @@
             };
             postDiv.innerHTML = `
                     <div class="post-info">
-                        <span class="info-item">${post.title}</span>
+                        <span class="info-item post-title">
+                                <a href="/api/view/boarddetail?id=${post.id}">${post.title}</a>
+                        </span>
                         <span class="info-item">${post.nickname}</span>
                         <span class="info-item">${dateParts}</span>
                     </div>
