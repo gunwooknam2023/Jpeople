@@ -51,9 +51,14 @@
         </div>
     </div>
 
-
+<button type="button" class="btn btn-primary" onclick="redirectToCreateBoard()">게시글 작성</button>
 
 <script>
+
+    function redirectToCreateBoard() {
+        window.location.href = "/api/view/createboard";
+    }
+
 
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
@@ -156,7 +161,12 @@
             const postDiv = document.createElement('div');
             postDiv.classList.add('user-info');
 
-            const dateParts = post.createdAt.split('T')[0];
+            const dateParts = post.createdAt.split('T');
+            const date = dateParts[0];
+            const time = dateParts[1].split('.')[0]; // Remove milliseconds
+
+            const formattedDateTime = `${date} ${time}`;
+
             const postData = {
                 id: post.id,
                 title: post.title,
@@ -168,7 +178,7 @@
                                 <a href="/api/view/boarddetail?id=${post.id}">${post.title}</a>
                         </span>
                         <span class="info-item">${post.nickname}</span>
-                        <span class="info-item">${dateParts}</span>
+                        <span class="info-item">${formattedDateTime}</span>
                     </div>
 
         `;

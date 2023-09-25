@@ -82,11 +82,15 @@
             .then(response => response.json())
             .then(postInfo => {
 
-                const dateParts = postInfo.createdAt.split('T')[0];
+                const dateParts = postInfo.createdAt.split('T');
+                const date = dateParts[0];
+                const time = dateParts[1].split('.')[0]; // Remove milliseconds
+
+                const formattedDateTime = `${date} ${time}`;
 
                 // 가져온 게시글 정보를 화면에 표시
                 document.getElementById('nicknames').textContent = postInfo.nickname;
-                document.getElementById('createdAts').textContent = dateParts;
+                document.getElementById('createdAts').textContent = formattedDateTime;
                 document.getElementById('titles').textContent = postInfo.title;
                 document.getElementById('contentss').textContent = postInfo.contents;
                 document.getElementById('viewCnts').textContent = postInfo.viewCnt;
