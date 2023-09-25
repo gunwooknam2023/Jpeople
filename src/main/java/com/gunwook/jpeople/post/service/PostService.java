@@ -2,9 +2,11 @@ package com.gunwook.jpeople.post.service;
 
 import com.gunwook.jpeople.post.dto.PostRequestDto;
 import com.gunwook.jpeople.post.dto.PostResponseDto;
+import com.gunwook.jpeople.post.entity.Category;
 import com.gunwook.jpeople.post.entity.Post;
 import com.gunwook.jpeople.post.repository.PostRepository;
 import com.gunwook.jpeople.user.entity.User;
+import com.gunwook.jpeople.user.entity.UserRoleEnum;
 import com.gunwook.jpeople.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,23 @@ public class PostService {
         );
 
         Post post = new Post(postRequestDto, user);
+        post.setCategoryBoard();
+        postRepository.save(post);
+        return "게시글이 생성되었습니다.";
+    }
+
+    public String createNotificationPost(PostRequestDto postRequestDto, User user) {
+        // 권한 조회
+        userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 후 사용하세요")
+        );
+
+        if(!user.getRole().equals(UserRoleEnum.ADMIN)){
+            throw new IllegalArgumentException("관리자가 아닙니다.");
+        }
+
+        Post post = new Post(postRequestDto, user);
+        post.setCategoryNotification();
         postRepository.save(post);
         return "게시글이 생성되었습니다.";
     }
@@ -70,8 +89,27 @@ public class PostService {
         );
 
         // 게시글 받아오기
-        List<Post> posts = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<Post> posts = postRepository.findByCategoryOrderByCreatedAtDesc(Category.FREE_BOARD);
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
+
+        for(Post post : posts){
+            PostResponseDto postResponseDto = new PostResponseDto(post);
+            postResponseDtos.add(postResponseDto);
+        }
+
+        return postResponseDtos;
+    }
+
+    public List<PostResponseDto> getNotificationPosts(User user) {
+        // 권한 조회
+        userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 후 사용하세요")
+        );
+
+        // 게시글 받아오기
+        List<Post> posts = postRepository.findByCategoryOrderByCreatedAtDesc(Category.NOTIFICATION_BOARD);
+        List<PostResponseDto> postResponseDtos = new ArrayList<>();
+
 
         for(Post post : posts){
             PostResponseDto postResponseDto = new PostResponseDto(post);

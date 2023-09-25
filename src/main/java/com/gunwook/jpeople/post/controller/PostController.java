@@ -19,7 +19,7 @@ public class PostController {
     private final PostService postService;
 
     /**
-     * 게시글 작성
+     * 자유게시글 작성
      * @param postRequestDto 게시글 양식
      * @param userDetails 유저 정보
      * @return 게시글 생성 성공/실패 여부
@@ -30,6 +30,21 @@ public class PostController {
         String result = postService.createPost(postRequestDto, userDetails.getUser());
         return ResponseEntity.ok(result);
     }
+
+    /**
+     * 공지사항 작성
+     * @param postRequestDto 게시글 양식
+     * @param userDetails 유저 정보
+     * @return 게시글 생성 성공/실패 여부
+     */
+    @PostMapping("/notificationposts")
+    ResponseEntity<String> createNotificationPost(@RequestBody PostRequestDto postRequestDto,
+                                      @AuthenticationPrincipal UserDetailsImpl userDetails){
+        String result = postService.createNotificationPost(postRequestDto, userDetails.getUser());
+        return ResponseEntity.ok(result);
+    }
+
+
 
     /**
      * 게시글 수정
@@ -60,13 +75,24 @@ public class PostController {
     }
 
     /**
-     * 게시글 전체 조회
+     * 게시글 전체 조회 (자유게시판)
      * @param userDetails 유저 정보
      * @return 게시글 정보
      */
     @GetMapping("/posts")
     ResponseEntity<List<PostResponseDto>> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
         List<PostResponseDto> postResponseDtos = postService.getPosts(userDetails.getUser());
+        return ResponseEntity.ok(postResponseDtos);
+    }
+
+    /**
+     * 게시글 전체 조회 (공지사항)
+     * @param userDetails 유저 정보
+     * @return 게시글 정보
+     */
+    @GetMapping("/notificationposts")
+    ResponseEntity<List<PostResponseDto>> getNotificationPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<PostResponseDto> postResponseDtos = postService.getNotificationPosts(userDetails.getUser());
         return ResponseEntity.ok(postResponseDtos);
     }
 

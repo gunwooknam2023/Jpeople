@@ -1,6 +1,7 @@
 package com.gunwook.jpeople.post.dto;
 
 import com.gunwook.jpeople.comment.dto.CommentResponseDto;
+import com.gunwook.jpeople.post.entity.Category;
 import com.gunwook.jpeople.post.entity.Post;
 import com.gunwook.jpeople.user.entity.User;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class PostResponseDto {
     private String nickname;
     private Long like;
     private Long viewCnt;
+    private Category category;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -34,6 +36,7 @@ public class PostResponseDto {
         this.nickname = post.getUser().getNickname();
         this.like = post.getGoodLike();
         this.viewCnt = post.getViewCnt();
+        this.category = post.getCategory();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
         this.commentResponseDtoList = post.getCommentList().stream()
