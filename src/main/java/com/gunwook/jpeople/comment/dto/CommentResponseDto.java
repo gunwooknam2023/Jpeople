@@ -12,6 +12,7 @@ public class CommentResponseDto {
     private Long id;
     private String contents;
     private Long post_id;
+    private String title;
     private Long user_id;
     private String username;
     private String nickname;
@@ -23,6 +24,7 @@ public class CommentResponseDto {
         this.id = comment.getId();
         this.contents = comment.getContents();
         this.post_id = comment.getPost().getId();
+        this.title = comment.getPost().getTitle();
         this.user_id = comment.getUser().getId();
         this.username = comment.getUser().getUsername();
         this.nickname = comment.getUser().getNickname();
