@@ -2,9 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의 프로젝트</title>
+    <link rel="stylesheet" href="/css/schedule.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 <body>
+
+<!-- 상단바 -->
+<div class="navbar">
+    <div class="navbar-left">
+        J PEOPLE
+    </div>
+    <div class="navbar-right">
+        <a href="/api/view/notification">공지사항</a>
+        <a href="/api/view/board">자유게시판</a>
+        <a href="/api/view/schedule">일정관리</a>
+        <a href="/api/view/mypage">마이페이지</a>
+    </div>
+</div>
+
+<!-- 페이지 내용 (중앙 부분) -->
+<!-- 여기에 내용 추가 -->
+
+<!-- 하단바 -->
+<div class="footer">
+    대표: 남건욱
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbarLeft = document.querySelector('.navbar-left');
+
+        navbarLeft.addEventListener('mouseover', function() {
+            navbarLeft.style.color = '#FF5733'; // 원하는 색상으로 변경
+        });
+
+        navbarLeft.addEventListener('mouseout', function() {
+            navbarLeft.style.color = ''; // 마우스를 떼면 원래 색상으로 돌아감
+        });
+
+        navbarLeft.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    });
+</script>
 
 </body>
 </html>
