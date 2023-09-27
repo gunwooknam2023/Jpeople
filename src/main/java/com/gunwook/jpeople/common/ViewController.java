@@ -41,5 +41,10 @@ public class ViewController {
         return "createboard";
     }
 
+    @GetMapping("/adminpage")
+    public String adminpage(){
+        return "adminpage";
+    }
+
 
 }
