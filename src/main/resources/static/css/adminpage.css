@@ -1,0 +1,70 @@
+@font-face {
+    font-family: 'HakgyoansimWoojuR';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'HakgyoansimWoojuR', sans-serif; /* 'omyu_pretty' 폰트를 사용하도록 설정 */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* 상단바 스타일 */
+.navbar {
+    background-color: #888; /* 회색 배경색 */
+    padding: 10px; /* 위 아래 여백과 좌우 여백을 줍니다 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 60px; /* 여백을 추가합니다. 필요에 따라 조절하세요. */
+}
+
+/* J PEOPLE 스타일 */
+.navbar-left {
+    text-align: center;
+    margin-right: auto; /* J PEOPLE 우측 여백 추가 */
+    font-weight: 900; /* 더 두껍게 설정 */
+    font-size: 1.7em; /* J PEOPLE 글자 크기 조절 */
+}
+
+/* 상단바 우측 정렬 */
+.navbar-right {
+    text-align: right;
+}
+
+/* 하단바 스타일 */
+.footer {
+    text-align: center;
+    background-color: #888; /* 회색 배경색 */
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0; /* 좌측 여백 없애기 */
+    font-weight: bold;
+}
+
+/* 글씨 크기 늘리기 */
+.navbar, .navbar a, .footer {
+    font-size: 1.1em;
+}
+
+/* 간격 늘리기 */
+.navbar-right a {
+    text-decoration: none; /* 밑줄 제거 */
+    font-weight: bold; /* 링크 글씨의 굵기를 기본 값으로 설정 */
+    margin-left: 10px; /* 각 링크 사이의 간격 늘리기 */
+    margin-right: 10px; /* 각 링크 우측 여백 추가 */
+    color: #444444; /* 글자색을 검은색으로 설정 */
+}
+
+.navbar-left:hover {
+    text-decoration: none; /* 밑줄 제거 */
+    cursor: pointer; /* 커서 모양을 포인터로 변경 */
+}
