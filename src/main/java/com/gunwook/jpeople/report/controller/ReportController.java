@@ -1,12 +1,17 @@
 package com.gunwook.jpeople.report.controller;
 
+import com.gunwook.jpeople.post.dto.PostResponseDto;
 import com.gunwook.jpeople.report.dto.ReportRequestDto;
+import com.gunwook.jpeople.report.dto.ReportResponseDto;
 import com.gunwook.jpeople.report.service.ReportService;
 import com.gunwook.jpeople.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +32,12 @@ public class ReportController {
                                       @RequestBody ReportRequestDto reportRequestDto){
         String result = reportService.reportPost(userDetails.getUser(), post_id, reportRequestDto);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/posts/report")
+    ResponseEntity<List<ReportResponseDto>> getReportPost(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        List<ReportResponseDto> reportResponseDtos = reportService.getReportPost(userDetails.getUser());
+        return ResponseEntity.ok(reportResponseDtos);
     }
 
 //    /**

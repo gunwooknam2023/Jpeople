@@ -4,10 +4,12 @@ import com.gunwook.jpeople.post.entity.Post;
 import com.gunwook.jpeople.report.dto.ReportRequestDto;
 import com.gunwook.jpeople.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Entity
+@Getter
 public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

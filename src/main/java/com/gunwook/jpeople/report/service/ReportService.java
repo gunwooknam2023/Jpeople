@@ -2,9 +2,11 @@ package com.gunwook.jpeople.report.service;
 
 import com.gunwook.jpeople.comment.entity.Comment;
 import com.gunwook.jpeople.comment.repository.CommentRepository;
+import com.gunwook.jpeople.post.dto.PostResponseDto;
 import com.gunwook.jpeople.post.entity.Post;
 import com.gunwook.jpeople.post.repository.PostRepository;
 import com.gunwook.jpeople.report.dto.ReportRequestDto;
+import com.gunwook.jpeople.report.dto.ReportResponseDto;
 import com.gunwook.jpeople.report.entity.Report;
 import com.gunwook.jpeople.report.repository.ReportRepository;
 import com.gunwook.jpeople.user.entity.User;
@@ -13,6 +15,9 @@ import com.gunwook.jpeople.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +48,26 @@ public class ReportService {
         Report report = new Report(post, user, reportRequestDto);
         reportRepository.save(report);
         return "신고가 완료되었습니다.";
+    }
+
+    public List<ReportResponseDto> getReportPost(User user) {
+        userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 후 사용하세요.")
+        );
+
+        if(!user.getRole().equals(UserRoleEnum.ADMIN)){
+            throw new IllegalArgumentException("관리자만 조회가 가능합니다.");
+        }
+
+        List<Report> reports = reportRepository.findAll();
+        List<ReportResponseDto> reportResponseDtos = new ArrayList<>();
+
+        for(Report report : reports){
+            ReportResponseDto reportResponseDto = new ReportResponseDto(report);
+            reportResponseDtos.add(reportResponseDto);
+        }
+
+        return reportResponseDtos;
     }
 
 //    @Transactional
