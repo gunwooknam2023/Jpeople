@@ -86,3 +86,23 @@
     margin-left: 50px; /* 좌측 여백 추가 */
     margin-top: 10px; /* 상단 여백 추가 */
 }
+
+.profile-container {
+    text-align: center;
+    position: absolute; /* 절대 위치로 설정 */
+    top: 30%; /* 화면 높이의 중앙에 위치시킵니다. */
+    left: 50%; /* 화면 너비의 중앙에 위치시킵니다. */
+    transform: translate(-50%, -50%); /* 중앙 정렬 */
+    width: 20%; /* 가로폭을 80%로 설정 */
+    max-width: none; /* 기본 max-width를 무효화합니다. */
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    height: 30vh;
+}
+
+.profile-content {
+    margin-top: 20px;
+    font-size: 22px; /* 글자 크기를 18px로 설정 */
+    text-align: left;
+}
