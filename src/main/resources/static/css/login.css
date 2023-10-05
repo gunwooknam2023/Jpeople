@@ -1,0 +1,37 @@
+@font-face {
+    font-family: 'HakgyoansimWoojuR';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-2@1.0/HakgyoansimWoojuR.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'HakgyoansimWoojuR', sans-serif; /* 'omyu_pretty' 폰트를 사용하도록 설정 */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* 하단바 스타일 */
+.footer {
+    text-align: center;
+    background-color: #888; /* 회색 배경색 */
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0; /* 좌측 여백 없애기 */
+    font-weight: bold;
+}
+
+.form-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    font-size: x-large;
+}
+
