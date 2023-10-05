@@ -46,5 +46,10 @@ public class ViewController {
         return "adminpage";
     }
 
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
 
 }
