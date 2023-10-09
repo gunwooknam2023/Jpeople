@@ -68,3 +68,54 @@
     text-decoration: none; /* 밑줄 제거 */
     cursor: pointer; /* 커서 모양을 포인터로 변경 */
 }
+
+.content {
+    display: grid;
+    grid-template-columns: 45% 55%;
+    grid-template-rows: 45% 55%;
+    height: 100vh; /* 화면의 높이를 100%로 설정합니다. */
+    margin-left: 5%; /* 좌측 여백을 5%로 설정합니다. */
+}
+
+.board-section {
+    grid-column: 1 / 2; /* 1사분면에 위치하도록 설정합니다. */
+    grid-row: 1 / 2;
+    background-color: #f0f0f0; /* 배경색을 지정합니다. */
+    /* 다른 스타일링을 원하시면 여기에 추가하세요. */
+}
+
+/* CSS 파일에 추가하세요 */
+.latest-posts {
+    list-style: none; /* 리스트 스타일 제거 */
+    padding-left: 10px; /* 좌측 간격 제거 */
+}
+
+.info-item.post-title a {
+    color: inherit;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+h3 a {
+    color: black; /* 글자색을 검은색으로 설정 */
+    text-decoration: none; /* 밑줄 제거 */
+}
+
+.post-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.info-item.post-title {
+    flex: 1;
+    text-align: left;
+    padding-left: 20%;
+}
+
+.info-item.post-nickname {
+    flex: 1; /* 자식 요소가 가능한 최대 공간을 차지하도록 설정 */
+    text-align: right;
+    padding-right: 20%;
+}
+
+
