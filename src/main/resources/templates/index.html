@@ -24,6 +24,14 @@
     </div>
 </div>
 
+<div class="content">
+    <div class="board-section text-center">
+        <h3 style="padding-left: 10px; font-size: 50px; font-weight: bold;"><a href="/api/view/board">자유게시판</a></h3>
+        <ul class="latest-posts" style="font-size: 30px">
+        </ul>
+    </div>
+</div>
+
 <!-- 페이지 내용 (중앙 부분) -->
 <!-- 여기에 내용 추가 -->
 
@@ -35,6 +43,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
+        const latestPostsList = document.querySelector('.latest-posts');
 
         navbarLeft.addEventListener('mouseover', function() {
             navbarLeft.style.color = '#FF5733'; // 원하는 색상으로 변경
@@ -47,6 +56,36 @@
         navbarLeft.addEventListener('click', function() {
             window.location.href = '/';
         });
+
+        fetch('/api/posts')
+            .then(response => response.json())
+            .then(data => {
+                // 최신 게시글 목록을 가져온 후 처리하는 부분
+                data.slice(0, 10).forEach(post => {
+                    const listItem = document.createElement('li');
+                    const postInfo = document.createElement('div');
+                    postInfo.classList.add('post-info');
+
+                    const postTitle = document.createElement('span');
+                    postTitle.classList.add('info-item', 'post-title', 'font-weight-bold');
+                    const titleLink = document.createElement('a');
+                    titleLink.href = '/api/view/boarddetail?id=' + post.id;
+                    titleLink.textContent = post.title;
+                    postTitle.appendChild(titleLink);
+
+                    const nickname = document.createElement('span');
+                    nickname.classList.add('info-item', 'post-nickname');
+                    nickname.textContent = post.nickname;
+
+
+                    postInfo.appendChild(postTitle);
+                    postInfo.appendChild(nickname);
+
+                    listItem.appendChild(postInfo);
+                    latestPostsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('에러 발생:', error));
     });
 
 
