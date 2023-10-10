@@ -35,3 +35,18 @@
     font-size: x-large;
 }
 
+#login-kakao-btn {
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+    padding: 0.8rem 2.5rem;
+    transition: transform 80ms ease-in;
+    background-color: #fae100;
+    color: #371d1e;
+    WIDTH: 97%;
+    margin-top: 20px;
+}
+
