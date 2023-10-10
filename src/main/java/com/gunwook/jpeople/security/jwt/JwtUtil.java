@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 
 import java.util.Base64;
@@ -64,17 +65,13 @@ public class JwtUtil {
 
     // JWT Cookie 에 저장
     public void addJwtToCookie(String token, HttpServletResponse res) {
-        try {
-            token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
+        token = URLEncoder.encode(token, StandardCharsets.UTF_8).replaceAll("\\+", "%20"); // Cookie Value 에는 공백이 불가능해서 encoding 진행
 
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // Name-Value
-            cookie.setPath("/");
-
-            // Response 객체에 Cookie 추가
-            res.addCookie(cookie);
-        } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage());
-        }
+        Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token); // 쿠키 생성
+        cookie.setPath("/");
+        cookie.setMaxAge(60*60); // 1시간
+//        cookie.setSecure(true);
+        res.addCookie(cookie);
     }
 
     // JWT 토큰 substring
@@ -110,6 +107,13 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
+
+    // 사용자 권한 가져오기
+    public UserRoleEnum getUserRole(Claims info) {
+        String roleValue = info.get(AUTHORIZATION_KEY).toString();
+        return roleValue.equals("USER") ? UserRoleEnum.USER : UserRoleEnum.ADMIN;
+    }
+
     // HttpServletRequest 에서 Cookie Value : JWT 가져오기
     public String getTokenFromRequest(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
@@ -128,14 +132,14 @@ public class JwtUtil {
     }
 
     //로그아웃 쿠키 날짜를 0으로 만들어 만료시킴
-    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
+    public static void deleteCookie(HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             return;
         }
         for (Cookie cookie : cookies) {
-            if (name.equals(cookie.getName())) {
-                cookie.setValue("");
+            if(cookie.getName().equals(AUTHORIZATION_HEADER)){
+                cookie.setValue(""); // Clear the value of the cookie
                 cookie.setPath("/");
                 cookie.setMaxAge(0);
                 response.addCookie(cookie);

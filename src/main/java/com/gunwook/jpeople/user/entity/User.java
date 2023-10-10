@@ -64,4 +64,9 @@ public class User {
         this.kakaoId = kakaoId;
         return this;
     }
+
+    public User googleIdUpdate(String googleId){
+        this.googleId = googleId;
+        return this;
+    }
 }

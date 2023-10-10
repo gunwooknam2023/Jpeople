@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.RequestEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,16 +27,19 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class KakaoService implements OauthService{
+public class GoogleService implements OauthService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
     private final JwtUtil jwtUtil;
 
-    @Value("${kakao.client.id}")
+    @Value("${google.client.id}")
     private String CLIENT_ID;
 
-    @Value("${kakao.redirect.url}")
+    @Value("${google.client.secret}")
+    private String SECRET_KEY;
+
+    @Value("${google.redirect.url}")
     private String REDIRECT_URL;
 
     @Override
@@ -48,34 +51,36 @@ public class KakaoService implements OauthService{
         OauthUserDto oauthUserDto = getUserInfo(accessToken);
 
         // 3. 필요시에 회원가입
-        User kakaoUser = registerUserIfNeeded(oauthUserDto);
+        User googleUser = registerUserIfNeeded(oauthUserDto);
 
         // 4. JWT 토큰 생성
-        String createToken = jwtUtil.createToken(kakaoUser.getUsername(), kakaoUser.getRole());
+        String createToken = jwtUtil.createToken(googleUser.getUsername(), googleUser.getRole());
 
         return new OauthTokenDto(createToken);
     }
+
 
     @Override
     public String getToken(String code) throws JsonProcessingException{
         // 요청 URL 만들기
         URI uri = UriComponentsBuilder
-                .fromUriString("https://kauth.kakao.com")
-                .path("/oauth/token")
+                .fromUriString("https://oauth2.googleapis.com")
+                .path("/token")
                 .encode()
                 .build()
                 .toUri();
 
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+        headers.add("Content-type", "application/x-www-form-urlencoded");
 
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", CLIENT_ID); // 자신의 REST API 키
-        body.add("redirect_uri", REDIRECT_URL);
-        body.add("code",code); // 인가 코드
+        body.add("client_id", CLIENT_ID);
+        body.add("client_secret", SECRET_KEY);
+        body.add("redirect_uri", REDIRECT_URL); // 애플리케이션 등록시 설정한 redirect_uri
+        body.add("code", code);
 
         // 방법 1
         ResponseEntity<String> response = restTemplate.postForEntity(uri,new HttpEntity<>(body, headers),String.class);
@@ -87,69 +92,53 @@ public class KakaoService implements OauthService{
     }
 
     @Override
-    public OauthUserDto getUserInfo(String accessToken) throws  JsonProcessingException{
-        // 요청 URL 만들기
-        URI uri = UriComponentsBuilder
-                .fromUriString("https://kapi.kakao.com")
-                .path("/v2/user/me")
-                .encode()
-                .build()
-                .toUri();
-
-        // HTTP Header 생성
+    public OauthUserDto getUserInfo(String accessToken) {
+        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + accessToken);
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        headers.setBearerAuth(accessToken);
 
+        HttpEntity<?> entity = new HttpEntity<>(headers);
 
-        // Http 요청 보내기
-        RequestEntity<MultiValueMap<String, String>> requestEntity = RequestEntity
-                .post(uri)
-                .headers(headers)
-                .body(new LinkedMultiValueMap<>());
-
-        // HTTP 요청 보내기
-        ResponseEntity<String> response = restTemplate.exchange(
-                requestEntity,
-                String.class
+        ResponseEntity<OauthUserDto> response = restTemplate.exchange(
+                "https://www.googleapis.com/oauth2/v2/userinfo",
+                HttpMethod.GET,
+                entity,
+                OauthUserDto.class
         );
 
-        JsonNode jsonNode = new ObjectMapper().readTree(response.getBody());
-        String id = jsonNode.get("id").asText();
-        String nickname = jsonNode.get("properties")
-                .get("nickname").asText();
-        String email = jsonNode.get("kakao_account")
-                .get("email").asText();
-
-        return new OauthUserDto(id, nickname, email);
+        OauthUserDto userInfo = response.getBody();
+        return userInfo;
     }
 
     @Override
-    public User registerUserIfNeeded(OauthUserDto userDto){
-        // DB 에 중복된 Kakao Id 가 있는지 확인
-        String kakaoId = userDto.getId();
-        User kakaoUser = (User) userRepository.findByKakaoId(kakaoId).orElse(null);
+    public User registerUserIfNeeded(OauthUserDto apiUserInfoDto) {
+        // DB 에 중복된 구글 Id 가 있는지 확인
+        String googleId = apiUserInfoDto.getId();
+        User googleUser = userRepository.findByGoogleId(googleId).orElse(null);
 
-        if (kakaoUser == null) {
-            // 카카오 사용자 email 과 동일한 id 를 가진 회원이 있는지 확인
-            String kakaoEmail = userDto.getEmail();
-            User sameEmailUser = userRepository.findByUsername(kakaoEmail).orElse(null);
+        if (googleUser == null) {
+            // 구글 사용자 email 동일한 email 가진 회원이 있는지 확인
+            String googleEmail = apiUserInfoDto.getEmail();
+            User sameEmailUser = userRepository.findByUsername(googleEmail).orElse(null);
             if (sameEmailUser != null) {
-                kakaoUser = sameEmailUser;
-                // 기존 회원정보에 카카오 Id 추가
-                kakaoUser = kakaoUser.kakaoIdUpdate(kakaoId);
+                googleUser = sameEmailUser;
+                // 기존 회원정보에 구글 Id 추가
+                googleUser = googleUser.googleIdUpdate(googleId);
             } else {
                 // 신규 회원가입
                 // password: random UUID
                 String password = UUID.randomUUID().toString();
                 String encodedPassword = passwordEncoder.encode(password);
 
-                kakaoUser = new User(userDto, encodedPassword, UserRoleEnum.USER);
-                kakaoUser.kakaoIdUpdate(kakaoId);
-            }
-            userRepository.save(kakaoUser);
-        }
-        return kakaoUser;
-    }
+                String email = apiUserInfoDto.getEmail();
+                apiUserInfoDto.setNickname(email.substring(0,email.indexOf('@')));
 
+                googleUser = new User(apiUserInfoDto, encodedPassword, UserRoleEnum.USER);
+                googleUser.googleIdUpdate(googleId);
+            }
+
+            userRepository.save(googleUser);
+        }
+        return googleUser;
+    }
 }

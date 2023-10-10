@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -26,7 +27,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        String AccessTokenValue = jwtUtil.getTokenFromRequest(request);
 
+        if (StringUtils.hasText(AccessTokenValue)) {
+            jwtUtil.deleteCookie(request,response);
+        }
 
         try {
             LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
@@ -49,9 +54,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
-        String token = jwtUtil.createToken(username, role);
 
-        jwtUtil.addJwtToCookie(token, response);
+        String accessToken = jwtUtil.createToken(username, role);
+        jwtUtil.addJwtToCookie(accessToken, response);
+
         log.info("로그인 성공");
     }
 
