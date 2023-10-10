@@ -47,7 +47,7 @@ public class GoogleService implements OauthService{
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
 
-        // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+        // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "구글 사용자 정보" 가져오기
         OauthUserDto oauthUserDto = getUserInfo(accessToken);
 
         // 3. 필요시에 회원가입

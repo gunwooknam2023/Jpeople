@@ -69,4 +69,10 @@ public class User {
         this.googleId = googleId;
         return this;
     }
+
+    public User naverIdUpdate(String naverId){
+        this.naverId = naverId;
+        return this;
+    }
+
 }
