@@ -3,6 +3,7 @@ package com.gunwook.jpeople.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gunwook.jpeople.security.jwt.JwtUtil;
 import com.gunwook.jpeople.user.dto.LoginRequestDto;
+import com.gunwook.jpeople.user.entity.UserRoleEnum;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,7 +48,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         log.info("로그인 성공 및 JWT 생성");
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
-        String token = jwtUtil.createToken(username);
+        UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
+        String token = jwtUtil.createToken(username, role);
 
         jwtUtil.addJwtToCookie(token, response);
         log.info("로그인 성공");
