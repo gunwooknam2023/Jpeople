@@ -28,6 +28,7 @@ public class OauthLoginController {
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException{
         OauthTokenDto tokenDto = kakaoService.socialLogin(code);
         jwtUtil.addJwtToCookie(tokenDto.getAccessToken(), response);
+        jwtUtil.addJwtToCookieRefreshToken(tokenDto.getRefreshToken(), response);
         return "redirect:/";
     }
 
@@ -35,6 +36,7 @@ public class OauthLoginController {
     public String googleLogin(@RequestParam String code, HttpServletResponse response) throws  JsonProcessingException{
         OauthTokenDto tokenDto = googleService.socialLogin(code);
         jwtUtil.addJwtToCookie(tokenDto.getAccessToken(), response);
+        jwtUtil.addJwtToCookieRefreshToken(tokenDto.getRefreshToken(), response);
         return "redirect:/";
     }
 
@@ -42,6 +44,7 @@ public class OauthLoginController {
     public String naverLogin(@RequestParam String code, HttpServletResponse response) throws  JsonProcessingException, UnsupportedEncodingException {
         OauthTokenDto tokenDto = naverService.socialLogin(code);
         jwtUtil.addJwtToCookie(tokenDto.getAccessToken(), response);
+        jwtUtil.addJwtToCookieRefreshToken(tokenDto.getRefreshToken(), response);
         return "redirect:/";
     }
 

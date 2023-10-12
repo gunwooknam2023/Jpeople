@@ -11,4 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OauthTokenDto {
     private String accessToken;
+    private String refreshToken;
 }

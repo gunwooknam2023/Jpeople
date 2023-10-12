@@ -1,6 +1,8 @@
 package com.gunwook.jpeople.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gunwook.jpeople.redis.RefreshToken;
+import com.gunwook.jpeople.redis.RefreshTokenRepository;
 import com.gunwook.jpeople.security.jwt.JwtUtil;
 import com.gunwook.jpeople.user.dto.LoginRequestDto;
 import com.gunwook.jpeople.user.entity.UserRoleEnum;
@@ -19,8 +21,10 @@ import java.io.IOException;
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
         this.jwtUtil = jwtUtil;
         setFilterProcessesUrl("/api/login");
     }
@@ -28,8 +32,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String AccessTokenValue = jwtUtil.getTokenFromRequest(request);
+        String RefreshTokenValue = jwtUtil.getRefreshTokenFromRequest(request);
 
-        if (StringUtils.hasText(AccessTokenValue)) {
+        if (StringUtils.hasText(AccessTokenValue) || StringUtils.hasText(RefreshTokenValue)) {
             jwtUtil.deleteCookie(request,response);
         }
 
@@ -55,8 +60,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
         UserRoleEnum role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
 
+        // 엑세스 토큰 발급, 쿠키에 저장
         String accessToken = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(accessToken, response);
+
+        // 리프레시 토큰 발급, Redis에 저장
+        RefreshToken refreshToken = jwtUtil.createRefreshToken(username, role);
+        refreshTokenRepository.save(refreshToken);
+        jwtUtil.addJwtToCookieRefreshToken(refreshToken.getRefreshToken(), response);
 
         log.info("로그인 성공");
     }

@@ -3,6 +3,8 @@ package com.gunwook.jpeople.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gunwook.jpeople.redis.RefreshToken;
+import com.gunwook.jpeople.redis.RefreshTokenRepository;
 import com.gunwook.jpeople.security.jwt.JwtUtil;
 import com.gunwook.jpeople.user.dto.OauthTokenDto;
 import com.gunwook.jpeople.user.dto.OauthUserDto;
@@ -28,6 +30,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class KakaoService implements OauthService{
+    private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
@@ -53,7 +56,11 @@ public class KakaoService implements OauthService{
         // 4. JWT 토큰 생성
         String createToken = jwtUtil.createToken(kakaoUser.getUsername(), kakaoUser.getRole());
 
-        return new OauthTokenDto(createToken);
+        // 5. 리프레시 토큰 생성
+        RefreshToken refreshToken = jwtUtil.createRefreshToken(kakaoUser.getUsername(), kakaoUser.getRole());
+        refreshTokenRepository.save(refreshToken);
+
+        return new OauthTokenDto(createToken, refreshToken.getRefreshToken());
     }
 
     @Override
