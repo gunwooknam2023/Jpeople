@@ -1,5 +1,7 @@
 package com.gunwook.jpeople.config;
 
+import com.gunwook.jpeople.redis.RedisService;
+import com.gunwook.jpeople.redis.RefreshTokenRepository;
 import com.gunwook.jpeople.security.JwtAuthenticationFilter;
 import com.gunwook.jpeople.security.JwtAuthorizationFilter;
 import com.gunwook.jpeople.security.UserDetailsServiceImpl;
@@ -27,6 +29,8 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final RedisService redisService;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,14 +44,14 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, refreshTokenRepository);
         filter.setAuthenticationManager(authenticationManger(authenticationConfiguration));
         return filter;
     }
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        return new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        return new JwtAuthorizationFilter(jwtUtil, redisService, userDetailsService);
     }
 
     @Bean
