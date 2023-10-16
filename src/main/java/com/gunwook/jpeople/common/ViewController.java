@@ -51,5 +51,10 @@ public class ViewController {
         return "login";
     }
 
+    @GetMapping("/signup")
+    public String signup(){
+        return "signup";
+    }
+
 
 }

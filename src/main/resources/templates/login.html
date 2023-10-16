@@ -28,7 +28,7 @@
         <input type="password" class="form-control" id="password">
     </div>
     <div>
-        <button type="button" class="btn btn-secondary">회원가입</button>
+        <button type="button" class="btn btn-secondary" onclick="signup()">회원가입</button>
         <button type="button" class="btn btn-primary" onclick="login()">로그인</button>
     </div>
     <div>
@@ -49,6 +49,9 @@
 </form>
 
 <script>
+    function signup() {
+        window.location.href = "/api/view/signup";
+    }
 
     function login() {
         var username = document.getElementById('username').value;
