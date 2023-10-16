@@ -35,7 +35,9 @@
 
 /* 상단바 우측 정렬 */
 .navbar-right {
-    text-align: right;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 /* 하단바 스타일 */
@@ -69,7 +71,7 @@
     cursor: pointer; /* 커서 모양을 포인터로 변경 */
 }
 
-.navbar-right a:nth-child(4) {
+.navbar-right a:nth-child(6) {
     color: #000000; /* 더 진한 회색 */
 }
 

@@ -35,7 +35,9 @@
 
 /* 상단바 우측 정렬 */
 .navbar-right {
-    text-align: right;
+    display: flex;
+    gap: 10px;
+    align-items: center;
 }
 
 /* 하단바 스타일 */
