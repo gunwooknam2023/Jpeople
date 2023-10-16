@@ -82,11 +82,11 @@ public class PostService {
         return "게시글이 삭제되었습니다.";
     }
 
-    public List<PostResponseDto> getPosts(User user) {
+    public List<PostResponseDto> getPosts() {
         // 권한 조회
-        userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("로그인 후 사용하세요")
-        );
+//        userRepository.findByUsername(user.getUsername()).orElseThrow(
+//                () -> new IllegalArgumentException("로그인 후 사용하세요")
+//        );
 
         // 게시글 받아오기
         List<Post> posts = postRepository.findByCategoryOrderByCreatedAtDesc(Category.FREE_BOARD);
@@ -100,11 +100,11 @@ public class PostService {
         return postResponseDtos;
     }
 
-    public List<PostResponseDto> getNotificationPosts(User user) {
+    public List<PostResponseDto> getNotificationPosts() {
         // 권한 조회
-        userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("로그인 후 사용하세요")
-        );
+//        userRepository.findByUsername(user.getUsername()).orElseThrow(
+//                () -> new IllegalArgumentException("로그인 후 사용하세요")
+//        );
 
         // 게시글 받아오기
         List<Post> posts = postRepository.findByCategoryOrderByCreatedAtDesc(Category.NOTIFICATION_BOARD);
@@ -122,9 +122,9 @@ public class PostService {
     @Transactional
     public PostResponseDto getPost(User user, Long postId) {
         // 권한 조회
-        userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("로그인 후 사용하세요")
-        );
+//        userRepository.findByUsername(user.getUsername()).orElseThrow(
+//                () -> new IllegalArgumentException("로그인 후 사용하세요")
+//        );
 
         // 게시글 받아오기
         Post post = postRepository.findById(postId).orElseThrow(

@@ -80,14 +80,27 @@
 }
 
 .board-section {
-    grid-column: 1 / 2; /* 1사분면에 위치하도록 설정합니다. */
-    grid-row: 1 / 2;
+    width: 80%; /* 가로 크기를 100%로 설정합니다. */
+    height: 100%; /* 세로 크기를 100%로 설정합니다. */
     background-color: #f0f0f0; /* 배경색을 지정합니다. */
     /* 다른 스타일링을 원하시면 여기에 추가하세요. */
 }
 
 /* CSS 파일에 추가하세요 */
 .latest-posts {
+    list-style: none; /* 리스트 스타일 제거 */
+    padding-left: 10px; /* 좌측 간격 제거 */
+}
+
+.notifications-section {
+    width: 70%; /* 가로 크기를 100%로 설정합니다. */
+    height: 100%; /* 세로 크기를 100%로 설정합니다. */
+    background-color: #f0f0f0; /* 배경색을 지정합니다. */
+    /* 다른 스타일링을 원하시면 여기에 추가하세요. */
+}
+
+/* CSS 파일에 추가하세요 */
+.latest-notification {
     list-style: none; /* 리스트 스타일 제거 */
     padding-left: 10px; /* 좌측 간격 제거 */
 }

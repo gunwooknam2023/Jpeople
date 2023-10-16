@@ -4,6 +4,7 @@ import com.gunwook.jpeople.post.dto.PostRequestDto;
 import com.gunwook.jpeople.post.dto.PostResponseDto;
 import com.gunwook.jpeople.post.service.PostService;
 import com.gunwook.jpeople.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class PostController {
      * @return 게시글 생성 성공/실패 여부
      */
     @PostMapping("/posts")
-    ResponseEntity<String> createPost(@RequestBody PostRequestDto postRequestDto,
+    ResponseEntity<String> createPost(@RequestBody @Valid PostRequestDto postRequestDto,
                                       @AuthenticationPrincipal UserDetailsImpl userDetails){
         String result = postService.createPost(postRequestDto, userDetails.getUser());
         return ResponseEntity.ok(result);
@@ -38,7 +39,7 @@ public class PostController {
      * @return 게시글 생성 성공/실패 여부
      */
     @PostMapping("/notificationposts")
-    ResponseEntity<String> createNotificationPost(@RequestBody PostRequestDto postRequestDto,
+    ResponseEntity<String> createNotificationPost(@RequestBody @Valid PostRequestDto postRequestDto,
                                       @AuthenticationPrincipal UserDetailsImpl userDetails){
         String result = postService.createNotificationPost(postRequestDto, userDetails.getUser());
         return ResponseEntity.ok(result);
@@ -54,7 +55,7 @@ public class PostController {
      * @return 게시글 수정 성공/실패 여부
      */
     @PutMapping("/posts/{post_id}")
-    ResponseEntity<String> updatePost(@RequestBody PostRequestDto postRequestDto,
+    ResponseEntity<String> updatePost(@RequestBody @Valid PostRequestDto postRequestDto,
                                       @AuthenticationPrincipal UserDetailsImpl userDetails,
                                       @PathVariable Long post_id){
         String result = postService.updatePost(postRequestDto, userDetails.getUser(), post_id);
@@ -76,23 +77,21 @@ public class PostController {
 
     /**
      * 게시글 전체 조회 (자유게시판)
-     * @param userDetails 유저 정보
      * @return 게시글 정보
      */
     @GetMapping("/posts")
-    ResponseEntity<List<PostResponseDto>> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<PostResponseDto> postResponseDtos = postService.getPosts(userDetails.getUser());
+    ResponseEntity<List<PostResponseDto>> getPosts(){
+        List<PostResponseDto> postResponseDtos = postService.getPosts();
         return ResponseEntity.ok(postResponseDtos);
     }
 
     /**
      * 게시글 전체 조회 (공지사항)
-     * @param userDetails 유저 정보
      * @return 게시글 정보
      */
     @GetMapping("/notificationposts")
-    ResponseEntity<List<PostResponseDto>> getNotificationPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<PostResponseDto> postResponseDtos = postService.getNotificationPosts(userDetails.getUser());
+    ResponseEntity<List<PostResponseDto>> getNotificationPosts(){
+        List<PostResponseDto> postResponseDtos = postService.getNotificationPosts();
         return ResponseEntity.ok(postResponseDtos);
     }
 

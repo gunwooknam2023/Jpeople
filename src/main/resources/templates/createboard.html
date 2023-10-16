@@ -67,9 +67,11 @@
         var responseText = xhr.responseText;
         console.log(responseText); // 응답 문자열 출력
         if (responseText === "게시글이 생성되었습니다.") {
+          alert("게시글이 생성되었습니다.");
           window.location.href = '/api/view/board';
         }
       } else {
+        alert("게시글의 형식이 올바르지 않습니다.");
         console.error('Error:', xhr.status, xhr.statusText);
       }
     };
