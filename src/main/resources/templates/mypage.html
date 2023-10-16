@@ -81,6 +81,17 @@
         const navbarLeft = document.querySelector('.navbar-left');
         const loginButton = document.querySelector('.login-button');
         const logoutButton = document.querySelector('.logout-button');
+        const profileButton = document.querySelector('.profile') // 프로필 버튼 선택
+        const postsButton = document.querySelector('.posts'); // 작성한 게시글 버튼 선택
+        const commentsButton = document.querySelector('.comments'); // 작성한 게시글 버튼 선택
+
+        profileButton.addEventListener('click', function() {
+            loadProfileInformation();
+        });
+
+        postsButton.addEventListener('click', function() {
+            fetchAndRenderPosts(); // 버튼을 클릭하면 fetchAndRenderPosts 함수 실행
+        });
 
         // checkCookie() 함수 추가
         function checkCookie() {
@@ -112,7 +123,7 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    function loadProfileInformation(){
         const profileContent = document.querySelector('.profile-content');
 
         // 프로필 정보 불러오기
@@ -134,7 +145,8 @@
         `;
             })
             .catch(error => console.error('Error:', error));
-    });
+
+    }
 
     const userPerPage = 15;
     const userInfoList = document.querySelector('.user-info-list');
@@ -161,12 +173,15 @@
         }
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchAndRenderPosts();
-    });
-
     // 작성한 게시물 조회 API와 연결
     function fetchAndRenderPosts() {
+        const profileContainer = document.querySelector('.profile-container');
+        const userInfoList = document.querySelector('.user-info-list');
+
+        // 프로필 컨테이너를 숨기고, 유저 정보 리스트를 보이게 설정
+        profileContainer.style.display = 'none';
+        userInfoList.style.display = 'block';
+
         fetch('/api/mypage/posts', {
             method: 'GET',
             headers: {
