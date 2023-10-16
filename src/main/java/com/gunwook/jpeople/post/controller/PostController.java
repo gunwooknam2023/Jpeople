@@ -76,23 +76,21 @@ public class PostController {
 
     /**
      * 게시글 전체 조회 (자유게시판)
-     * @param userDetails 유저 정보
      * @return 게시글 정보
      */
     @GetMapping("/posts")
-    ResponseEntity<List<PostResponseDto>> getPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<PostResponseDto> postResponseDtos = postService.getPosts(userDetails.getUser());
+    ResponseEntity<List<PostResponseDto>> getPosts(){
+        List<PostResponseDto> postResponseDtos = postService.getPosts();
         return ResponseEntity.ok(postResponseDtos);
     }
 
     /**
      * 게시글 전체 조회 (공지사항)
-     * @param userDetails 유저 정보
      * @return 게시글 정보
      */
     @GetMapping("/notificationposts")
-    ResponseEntity<List<PostResponseDto>> getNotificationPosts(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        List<PostResponseDto> postResponseDtos = postService.getNotificationPosts(userDetails.getUser());
+    ResponseEntity<List<PostResponseDto>> getNotificationPosts(){
+        List<PostResponseDto> postResponseDtos = postService.getNotificationPosts();
         return ResponseEntity.ok(postResponseDtos);
     }
 

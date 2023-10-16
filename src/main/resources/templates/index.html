@@ -32,6 +32,11 @@
         <ul class="latest-posts" style="font-size: 30px">
         </ul>
     </div>
+    <div class="notifications-section text-center">
+        <h3 style="padding-left: 10px; font-size: 50px; font-weight: bold;"><a href="/api/view/notification">공지사항</a></h3>
+        <ul class="latest-notification" style="font-size: 30px">
+        </ul>
+    </div>
 </div>
 
 <!-- 페이지 내용 (중앙 부분) -->
@@ -46,6 +51,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
         const latestPostsList = document.querySelector('.latest-posts');
+        const latestNotificationList = document.querySelector('.latest-notification');
         const loginButton = document.querySelector('.login-button');
         const logoutButton = document.querySelector('.logout-button');
 
@@ -94,6 +100,7 @@
                     titleLink.textContent = post.title;
                     postTitle.appendChild(titleLink);
 
+
                     const nickname = document.createElement('span');
                     nickname.classList.add('info-item', 'post-nickname');
                     nickname.textContent = post.nickname;
@@ -107,6 +114,38 @@
                 });
             })
             .catch(error => console.error('에러 발생:', error));
+
+        fetch('/api/notificationposts')
+            .then(response => response.json())
+            .then(data => {
+                // 최신 게시글 목록을 가져온 후 처리하는 부분
+                data.slice(0, 10).forEach(post => {
+                    const listItem = document.createElement('li');
+                    const postInfo = document.createElement('div');
+                    postInfo.classList.add('post-info');
+
+                    const postTitle = document.createElement('span');
+                    postTitle.classList.add('info-item', 'post-title', 'font-weight-bold');
+                    const titleLink = document.createElement('a');
+                    titleLink.href = '/api/view/boarddetail?id=' + post.id;
+                    titleLink.textContent = post.title;
+                    postTitle.appendChild(titleLink);
+
+
+                    const nickname = document.createElement('span');
+                    nickname.classList.add('info-item', 'post-nickname');
+                    nickname.textContent = post.nickname;
+
+
+                    postInfo.appendChild(postTitle);
+                    postInfo.appendChild(nickname);
+
+                    listItem.appendChild(postInfo);
+                    latestNotificationList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('에러 발생:', error));
+
     });
 
     function logout() {
