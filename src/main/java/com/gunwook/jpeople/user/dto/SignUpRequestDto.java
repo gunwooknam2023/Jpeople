@@ -15,8 +15,10 @@ public class SignUpRequestDto {
     @NotBlank(message =  "패스워드를 입력해주세요.")
     private String password;
 
+    @NotBlank(message =  "닉네임을 입력해주세요.")
     private String nickname;
 
+    @NotBlank(message =  "자기소개를 입력해주세요.")
     private String introduction;
 
     private boolean admin;
