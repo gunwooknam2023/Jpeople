@@ -17,7 +17,7 @@
 
 
 <form class="form-container">
-    <div style="font-size: 30px">J PEOPLE</div>
+    <div style="font-size: 30px; font-weight: bold">J PEOPLE</div>
     <br>
     <div class="mb-3">
         <label for="username" class="form-label">아이디</label>
@@ -49,6 +49,23 @@
 </form>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const jPeopleTitle = document.querySelector('.form-container div');
+
+        jPeopleTitle.addEventListener('mouseover', function() {
+            jPeopleTitle.style.color = '#FF5733'; // 원하는 색상으로 변경
+            jPeopleTitle.style.cursor = 'pointer'; // 포인터 커서로 변경
+        });
+
+        jPeopleTitle.addEventListener('mouseout', function() {
+            jPeopleTitle.style.color = ''; // 마우스를 떼면 원래 색상으로 돌아감
+        });
+
+        jPeopleTitle.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    });
+
     function signup() {
         window.location.href = "/api/view/signup";
     }

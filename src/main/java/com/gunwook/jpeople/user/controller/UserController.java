@@ -6,6 +6,7 @@ import com.gunwook.jpeople.user.dto.SignUpRequestDto;
 import com.gunwook.jpeople.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,7 +25,7 @@ public class UserController {
      * @return 회원가입 성공/실패 여부
      */
     @PostMapping("/signup")
-    ResponseEntity<String> signUp(@RequestBody SignUpRequestDto signUpRequestDto){
+    ResponseEntity<String> signUp(@RequestBody @Valid SignUpRequestDto signUpRequestDto){
         String result = userService.signUp(signUpRequestDto);
         return ResponseEntity.ok(result);
     }
