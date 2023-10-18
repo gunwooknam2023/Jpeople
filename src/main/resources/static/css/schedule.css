@@ -74,3 +74,19 @@
 .navbar-right a:nth-child(5) {
     color: #000000; /* 더 진한 회색 */
 }
+
+.cardcontainer {
+    /* 컨테이너의 상단 여백을 조절하고 배경색을 추가합니다. */
+    margin-top: 8%; /* 원하는 여백 값으로 조정하세요. */
+    margin-left: 13%; /* 원하는 여백 값을 설정하세요. */
+    margin-right: 13%; /* 원하는 여백 값을 설정하세요. */
+    background: blue;
+}
+
+.card-body{
+    text-align: center;
+}
+
+.add{
+    text-align: center;
+}
