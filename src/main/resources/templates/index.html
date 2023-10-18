@@ -48,6 +48,71 @@
 </div>
 
 <script>
+
+    // 페이지의 자유게시판, 공지사항 클릭시 로그인 요청
+    document.addEventListener('DOMContentLoaded', function() {
+        const boardSection = document.querySelector('.board-section');
+        const notificationSection = document.querySelector('.notifications-section');
+
+        boardSection.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLinkClick('/api/view/board');
+        });
+
+        notificationSection.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLinkClick('/api/view/notification');
+        });
+    });
+
+    // 네비게이션바의 공지사항, 자유게시판, 일정관리, 마이페이지를 눌렀을때 로그인 요청
+    document.addEventListener('DOMContentLoaded', function() {
+        const notificationLink = document.querySelector('a[href="/api/view/notification"]');
+        const boardLink = document.querySelector('a[href="/api/view/board"]');
+        const scheduleLink = document.querySelector('a[href="/api/view/schedule"]');
+        const mypageLink = document.querySelector('a[href="/api/view/mypage"]');
+
+        notificationLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLinkClick('/api/view/notification');
+        });
+
+        boardLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLinkClick('/api/view/board');
+        });
+
+        scheduleLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLinkClick('/api/view/schedule');
+        });
+
+        mypageLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLinkClick('/api/view/mypage');
+        });
+    });
+
+
+    // 토큰체크
+    function handleLinkClick(link) {
+        var token = Cookies.get('Authorization');
+
+        if (token) {
+            window.location.href = link;
+        } else {
+            showLoginConfirmation();
+        }
+    }
+
+    // 로그인 요청, 이동
+    function showLoginConfirmation() {
+        if (confirm("로그인이 필요합니다. 로그인 하시겠습니까?")) {
+            window.location.href = '/api/view/login';
+        }
+    }
+
+
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
         const latestPostsList = document.querySelector('.latest-posts');
