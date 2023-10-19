@@ -6,8 +6,15 @@
     <title>일정</title>
     <link rel="stylesheet" href="/css/schedule.css">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -32,21 +39,49 @@
 
 
 <div class="cardcontainer">
-    <div class="card" style="width: 13rem;">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">일정 제목</h5>
-            <p class="card-text">일정 요약</p>
-            <p class="card-date">일정 날짜</p>
-            <p class="card-period">일정 기간</p>
-            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar" style="width: 25%">25%</div>
+    <div class="row" id="cardContainer"></div>
+<!--    <div class="card" style="width: 13rem;">-->
+<!--        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">-->
+<!--        <div class="card-body">-->
+<!--            <h5 class="card-title">일정 제목</h5>-->
+<!--            <p class="card-text">일정 요약</p>-->
+<!--            <p class="card-date">일정 날짜</p>-->
+<!--            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">-->
+<!--                <div class="progress-bar" style="width: 25%">25%</div>-->
+<!--            </div>-->
+<!--            <br>-->
+<!--            <a href="#" class="btn btn-primary">카드열기</a>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+
+<!-- 모달 내용 추가 -->
+<div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">일정 추가</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <br>
-            <a href="#" class="btn btn-primary">카드열기</a>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="scheduleTitle">제목</label>
+                    <input type="text" class="form-control" id="scheduleTitle" placeholder="제목을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="scheduleContents">일정 내용</label>
+                    <input type="text" class="form-control" id="scheduleContents" placeholder="일정 내용을 입력하세요">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" onclick="saveSchedule()">저장</button>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 <!-- 페이지 내용 (중앙 부분) -->
 <!-- 여기에 내용 추가 -->
@@ -57,6 +92,124 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // AJAX를 사용하여 서버에서 일정 목록을 가져오는 함수
+        function getScheduleData() {
+            $.ajax({
+                url: '/api/schedules',
+                type: 'GET',
+                success: function(data) {
+                    // 일정 목록을 받아왔을 때 실행할 코드
+                    displaySchedules(data);
+                },
+                error: function() {
+                    alert('일정을 불러오는 중 오류가 발생했습니다.');
+                }
+            });
+        }
+
+        // 일정 목록을 화면에 출력하는 함수
+        function displaySchedules(schedules) {
+            var cardContainer = document.querySelector('#cardContainer');
+
+            schedules.reverse().forEach(function(schedule) {
+                var cardColumn = document.createElement('div');
+                cardColumn.classList.add('col-md-2');
+
+                var card = document.createElement('div');
+                card.classList.add('card');
+                card.style = 'width: 13rem;';
+
+                var createdAt = new Date(schedule.createdAt);
+                var formattedDate = createdAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+
+
+                card.innerHTML = `
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">${schedule.title}</h5>
+                        <p class="card-text">${schedule.contents}</p>
+                        <p class="card-date">${formattedDate}</p>
+                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="${schedule.progress}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: ${schedule.progress}%">${schedule.progress}%</div>
+                        </div>
+                        <br>
+                        <a href="#" class="btn btn-primary">카드열기</a>
+                    </div>
+                `;
+
+                cardColumn.appendChild(card);
+                cardContainer.appendChild(cardColumn);
+            });
+        }
+
+        // 페이지 로드 시 일정 목록을 가져와서 출력
+        getScheduleData();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 모달 요소를 가져옵니다.
+        var modalElement = document.getElementById('addScheduleModal');
+        var modal = new bootstrap.Modal(modalElement);
+
+        // 버튼 요소를 가져옵니다.
+        var addButton = document.querySelector('.add button');
+
+        // 클릭 이벤트를 추가합니다.
+        addButton.addEventListener('click', function() {
+            // 모달을 띄웁니다.
+            modal.show();
+        });
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            document.body.classList.remove('modal-open');
+        });
+
+        modalElement.addEventListener('hidden.bs.modal', function () {
+            document.getElementById('scheduleTitle').value = ''; // 모달이 닫힐 때 입력값 초기화
+            document.getElementById('scheduleContents').value = ''; // 모달이 닫힐 때 입력값 초기화
+        });
+    });
+
+    function saveSchedule() {
+        var title = document.getElementById('scheduleTitle').value;
+        var contents = document.getElementById('scheduleContents').value;
+
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/schedules', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                var responseText = xhr.responseText;
+                console.log(responseText); // 응답 문자열 출력
+
+                // 성공적으로 저장된 경우, 모달 닫기
+                var modalElement = document.getElementById('addScheduleModal'); // 이 부분을 이동했습니다.
+                var modal = new bootstrap.Modal(modalElement); // 이 부분을 이동했습니다.
+                modal.hide();
+
+                document.getElementById('scheduleTitle').value = ''; // 입력값 초기화
+                document.getElementById('scheduleContents').value = ''; // 입력값 초기화
+
+                // 여기에 필요한 추가 작업을 수행하세요.
+                alert('일정이 생성되었습니다.'); // 모달이 닫힌 후에 알림을 띄웁니다.
+                window.location.href = '/api/view/schedule';
+            } else {
+                alert("일정을 저장하는 데 문제가 발생했습니다.");
+                console.error('Error:', xhr.status, xhr.statusText);
+            }
+        };
+
+        var scheduleData = {
+            title: title,
+            contents: contents
+        };
+
+        xhr.send(JSON.stringify(scheduleData));
+    }
+
+
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
         const loginButton = document.querySelector('.login-button');
@@ -110,6 +263,7 @@
         };
         xhr.send();
     }
+
 </script>
 
 </body>

@@ -13,7 +13,7 @@ import java.util.List;
 public class SchedulePostResponseDto {
     private Long id;
     private String title;
-    private String promise;
+    private String contents;
     private Long user_id;
     private List<ScheduleCardResponseDto> scheduleCardResponseDtos;
     private LocalDateTime createdAt;
@@ -22,7 +22,7 @@ public class SchedulePostResponseDto {
     public SchedulePostResponseDto(SchedulePost schedulePost){
         this.id = schedulePost.getId();
         this.title = schedulePost.getTitle();
-        this.promise = schedulePost.getPromise();
+        this.contents = schedulePost.getContents();
         this.user_id = schedulePost.getUser().getId();
         this.createdAt = schedulePost.getCreatedAt();
         this.modifiedAt = schedulePost.getModifiedAt();
