@@ -24,8 +24,8 @@ public class SchedulePost extends TimeStamped {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "promise", nullable = false)
-    private String promise;
+    @Column(name = "contents", nullable = false)
+    private String contents;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -36,13 +36,13 @@ public class SchedulePost extends TimeStamped {
 
     public SchedulePost(SchedulePostRequestDto schedulePostRequestDto, User user){
         this.title = schedulePostRequestDto.getTitle();
-        this.promise = schedulePostRequestDto.getPromise();
+        this.contents = schedulePostRequestDto.getContents();
         this.user = user;
     }
 
     public void updateSchedulePost(SchedulePostRequestDto schedulePostRequestDto){
         this.title = schedulePostRequestDto.getTitle();
-        this.promise = schedulePostRequestDto.getPromise();
+        this.contents = schedulePostRequestDto.getContents();
     }
 
 }

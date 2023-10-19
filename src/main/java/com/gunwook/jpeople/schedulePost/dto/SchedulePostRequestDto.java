@@ -9,5 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SchedulePostRequestDto {
     private String title;
-    private String promise;
+    private String contents;
 }
