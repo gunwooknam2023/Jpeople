@@ -153,7 +153,7 @@
             .then(response => response.json())
             .then(data => {
                 // 최신 게시글 목록을 가져온 후 처리하는 부분
-                data.slice(0, 10).forEach(post => {
+                data.slice(0, 7).forEach(post => {
                     const listItem = document.createElement('li');
                     const postInfo = document.createElement('div');
                     postInfo.classList.add('post-info');
@@ -184,7 +184,7 @@
             .then(response => response.json())
             .then(data => {
                 // 최신 게시글 목록을 가져온 후 처리하는 부분
-                data.slice(0, 10).forEach(post => {
+                data.slice(0, 7).forEach(post => {
                     const listItem = document.createElement('li');
                     const postInfo = document.createElement('div');
                     postInfo.classList.add('post-info');

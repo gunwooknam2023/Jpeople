@@ -4,6 +4,7 @@ import com.gunwook.jpeople.schedulePost.dto.SchedulePostRequestDto;
 import com.gunwook.jpeople.schedulePost.dto.SchedulePostResponseDto;
 import com.gunwook.jpeople.schedulePost.service.SchedulePostService;
 import com.gunwook.jpeople.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +26,7 @@ public class SchedulePostController {
      */
     @PostMapping("/schedules")
     ResponseEntity<String> createSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                          @RequestBody SchedulePostRequestDto schedulePostRequestDto){
+                                          @RequestBody @Valid SchedulePostRequestDto schedulePostRequestDto){
         String result = schedulePostService.createSchedule(userDetails.getUser(), schedulePostRequestDto);
         return ResponseEntity.ok(result);
     }
