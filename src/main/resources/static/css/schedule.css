@@ -28,6 +28,7 @@
 /* J PEOPLE 스타일 */
 .navbar-left {
     text-align: center;
+    margin-left: 15px;
     margin-right: auto; /* J PEOPLE 우측 여백 추가 */
     font-weight: 900; /* 더 두껍게 설정 */
     font-size: 1.7em; /* J PEOPLE 글자 크기 조절 */
@@ -83,6 +84,10 @@
     /*background: blue;*/
 }
 
+.cardcontainer .row .col-md-2 {
+    margin-bottom: 30px; /* 원하는 간격 값 */
+}
+
 .card-body{
     text-align: center;
 }
@@ -90,3 +95,29 @@
 .add{
     text-align: center;
 }
+
+.card-header {
+    position: relative;
+}
+
+
+.edit-btn,
+.delete-btn {
+    position: absolute;
+    top: 2px;
+    width: 13px;
+    height: 13px;
+    border-radius: 70%;
+    cursor: pointer;
+}
+
+.edit-btn {
+    background-color: yellow;
+    right: 20px;
+}
+
+.delete-btn {
+    background-color: red;
+    right: 5px;
+}
+

@@ -40,7 +40,7 @@ public class SchedulePostController {
      */
     @PutMapping("/schedules/{schedule_id}")
     ResponseEntity<String> updateSchedule(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                          @RequestBody SchedulePostRequestDto schedulePostRequestDto,
+                                          @RequestBody @Valid SchedulePostRequestDto schedulePostRequestDto,
                                           @PathVariable Long schedule_id){
         String result = schedulePostService.updateSchedule(userDetails.getUser(), schedulePostRequestDto, schedule_id);
         return ResponseEntity.ok(result);

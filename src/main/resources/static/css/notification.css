@@ -28,6 +28,7 @@
 /* J PEOPLE 스타일 */
 .navbar-left {
     text-align: center;
+    margin-left: 15px;
     margin-right: auto; /* J PEOPLE 우측 여백 추가 */
     font-weight: 900; /* 더 두껍게 설정 */
     font-size: 1.7em; /* J PEOPLE 글자 크기 조절 */

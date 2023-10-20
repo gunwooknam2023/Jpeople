@@ -56,6 +56,8 @@
 </div>
 
 <!-- 모달 내용 추가 -->
+
+<!--카드 생성 모델-->
 <div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -80,6 +82,33 @@
         </div>
     </div>
 </div>
+
+<!--카드 수정 모델-->
+<div class="modal fade" id="editScheduleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel2">일정 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="editScheduleTitle">제목</label>
+                    <input type="text" class="form-control" id="editScheduleTitle" placeholder="제목을 입력하세요">
+                </div>
+                <div class="form-group">
+                    <label for="editScheduleContents">일정 내용</label>
+                    <input type="text" class="form-control" id="editScheduleContents" placeholder="일정 내용을 입력하세요">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" id="saveEditButton">수정</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -125,7 +154,12 @@
 
 
                 card.innerHTML = `
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">
+                    <div class="card-header" style="position: relative;">
+                        <span class="edit-btn" onclick="editCard(this)"></span>
+                        <span class="delete-btn" onclick="deleteCard(this)"></span>
+                        <span class="scheduleId" style="display: none">${schedule.id}</span>
+                    </div>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfTQ8qvT0sRFA3p6vnIpySGUz2c3v07XP6sg&usqp=CAU" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">${schedule.title}</h5>
                         <p class="card-text">${schedule.contents}</p>
@@ -134,7 +168,7 @@
                             <div class="progress-bar" style="width: ${schedule.progress}%">${schedule.progress}%</div>
                         </div>
                         <br>
-                        <a href="#" class="btn btn-primary">카드열기</a>
+                        <a href="#" class="btn btn-primary">일정관리</a>
                     </div>
                 `;
 
@@ -146,6 +180,76 @@
         // 페이지 로드 시 일정 목록을 가져와서 출력
         getScheduleData();
     });
+
+    function editCard(button) {
+        var card = button.closest('.card');
+        var scheduleId = card.querySelector('.scheduleId').textContent;
+        var scheduleTitle = card.querySelector('.card-title').textContent;
+        var scheduleContents = card.querySelector('.card-text').textContent;
+
+        var modalTitleInput = document.getElementById('editScheduleTitle');  // 수정 모달의 제목 입력 필드
+        var modalContentsInput = document.getElementById('editScheduleContents');  // 수정 모달의 내용 입력 필드
+
+        modalTitleInput.value = scheduleTitle;
+        modalContentsInput.value = scheduleContents;
+
+        $('#editScheduleModal').modal('show');
+
+        // 저장 버튼 클릭 이벤트에 수정 요청 추가
+        var saveButton = document.getElementById('saveEditButton');  // 수정 모달의 저장 버튼
+        saveButton.onclick = function() {
+            var updatedTitle = modalTitleInput.value;
+            var updatedContents = modalContentsInput.value;
+
+            fetch('/api/schedules/' + scheduleId, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title: updatedTitle,
+                    contents: updatedContents
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    alert("일정이 수정되었습니다.");
+                    window.location.reload();
+                })
+                .catch(error => {
+                    alert("제목, 내용을 10글자 미만으로 작성해주세요.")
+                    console.error('Error:', error);
+                });
+        }
+    }
+
+    function deleteCard(button) {
+        var card = button.closest('.card');
+        var scheduleId = card.querySelector('.scheduleId').textContent; // 카드의 일정 아이디를 가져옵니다.
+        var confirmation = confirm("일정을 삭제하시겠습니까?");
+
+        if (confirmation) {
+            fetch('/api/schedules/' + scheduleId, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    alert("일정이 삭제되었습니다.");
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         // 모달 요소를 가져옵니다.
