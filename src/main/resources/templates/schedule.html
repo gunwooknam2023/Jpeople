@@ -40,19 +40,19 @@
 
 <div class="cardcontainer">
     <div class="row" id="cardContainer"></div>
-<!--    <div class="card" style="width: 13rem;">-->
-<!--        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">-->
-<!--        <div class="card-body">-->
-<!--            <h5 class="card-title">일정 제목</h5>-->
-<!--            <p class="card-text">일정 요약</p>-->
-<!--            <p class="card-date">일정 날짜</p>-->
-<!--            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">-->
-<!--                <div class="progress-bar" style="width: 25%">25%</div>-->
-<!--            </div>-->
-<!--            <br>-->
-<!--            <a href="#" class="btn btn-primary">카드열기</a>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--    <div class="card" style="width: 13rem;">-->
+    <!--        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">-->
+    <!--        <div class="card-body">-->
+    <!--            <h5 class="card-title">일정 제목</h5>-->
+    <!--            <p class="card-text">일정 요약</p>-->
+    <!--            <p class="card-date">일정 날짜</p>-->
+    <!--            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">-->
+    <!--                <div class="progress-bar" style="width: 25%">25%</div>-->
+    <!--            </div>-->
+    <!--            <br>-->
+    <!--            <a href="#" class="btn btn-primary">카드열기</a>-->
+    <!--        </div>-->
+    <!--    </div>-->
 </div>
 
 <!-- 모달 내용 추가 -->
@@ -109,6 +109,24 @@
     </div>
 </div>
 
+<!--일정관리 카드-->
+<div class="modal fade" id="scheduleManagementModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel3">일정 관리</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 이곳에 카드 정보가 들어갑니다. -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary">추가</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -121,6 +139,44 @@
 </div>
 
 <script>
+    // AJAX를 사용하여 서버에서 카드 정보를 가져오는 함수
+    function openScheduleManagementModal(scheduleId) {
+        $.ajax({
+            url: '/api/schedules/cards/' + scheduleId,
+            type: 'GET',
+            success: function(data) {
+                displayScheduleCards(data);
+            },
+            error: function() {
+                alert('카드 정보를 불러오는 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    // 모달에 일정의 카드 정보를 표시하는 함수
+    function displayScheduleCards(cards) {
+        var modalBody = document.querySelector('#scheduleManagementModal .modal-body');
+        modalBody.innerHTML = ''; // 기존 내용 초기화
+
+        cards.forEach(function(card) {
+            var cardItem = document.createElement('div');
+            cardItem.classList.add('card');
+
+            cardItem.innerHTML = `
+            <div class="card-body d-flex align-items-center"> <!-- d-flex와 align-items-center 추가 -->
+                <input type="checkbox" id="card-${card.id}" class="mr-2" style="margin-right: 8px"> <!-- mr-2 클래스 추가 -->
+                <label for="card-${card.id}" class="mb-0 font-weight-bold pl-2">${card.todo}</label> <!-- pl-2 클래스 추가 (왼쪽 여백) -->
+            </div>
+        `;
+
+            modalBody.appendChild(cardItem);
+        });
+
+        $('#scheduleManagementModal').modal('show');
+    }
+
+
+
     document.addEventListener('DOMContentLoaded', function() {
         // AJAX를 사용하여 서버에서 일정 목록을 가져오는 함수
         function getScheduleData() {
@@ -168,7 +224,7 @@
                             <div class="progress-bar" style="width: ${schedule.progress}%">${schedule.progress}%</div>
                         </div>
                         <br>
-                        <a href="#" class="btn btn-primary">일정관리</a>
+                        <a class="btn btn-primary" onclick="openScheduleManagementModal(${schedule.id})">일정관리</a>
                     </div>
                 `;
 
