@@ -139,6 +139,8 @@
 </div>
 
 <script>
+
+
     // AJAX를 사용하여 서버에서 카드 정보를 가져오는 함수
     function openScheduleManagementModal(scheduleId) {
         $.ajax({
@@ -154,26 +156,73 @@
     }
 
     // 모달에 일정의 카드 정보를 표시하는 함수
-    function displayScheduleCards(cards) {
+    async function displayScheduleCards(cards) {
         var modalBody = document.querySelector('#scheduleManagementModal .modal-body');
         modalBody.innerHTML = ''; // 기존 내용 초기화
 
-        cards.forEach(function(card) {
-            var cardItem = document.createElement('div');
-            cardItem.classList.add('card');
+        for (const card of cards) {
+            try {
+                var response = await $.ajax({
+                    url: '/api/schedules/cards/health/' + card.id,
+                    type: 'GET'
+                });
 
-            cardItem.innerHTML = `
-            <div class="card-body d-flex align-items-center"> <!-- d-flex와 align-items-center 추가 -->
-                <input type="checkbox" id="card-${card.id}" class="mr-2" style="margin-right: 8px"> <!-- mr-2 클래스 추가 -->
-                <label for="card-${card.id}" class="mb-0 font-weight-bold pl-2">${card.todo}</label> <!-- pl-2 클래스 추가 (왼쪽 여백) -->
-            </div>
-        `;
+                var isChecked = response === 'TRUE';
 
-            modalBody.appendChild(cardItem);
-        });
+                var cardItem = document.createElement('div');
+                cardItem.classList.add('card');
+
+                var checkboxId = `card-${card.id}`; // 체크박스의 ID 생성
+
+                cardItem.innerHTML = `
+                <div class="card-body d-flex align-items-center">
+                    <input type="checkbox" id="${checkboxId}" class="mr-2" style="margin-right: 8px" data-id="${card.id}" ${isChecked ? 'checked' : ''}>
+                    <label for="${checkboxId}" class="mb-0 font-weight-bold pl-2">${card.todo}</label>
+                </div>
+            `;
+
+                if (isChecked) {
+                    cardItem.style.backgroundColor = '#ccc'; // 체크된 경우 회색으로 변경
+                }
+
+                modalBody.appendChild(cardItem);
+
+                // 체크박스 상태 변경 이벤트 처리
+                var checkbox = cardItem.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', async function() {
+                    var isChecked = this.checked;
+                    var cardId = this.dataset.id;
+
+                    try {
+                        var response = await $.ajax({
+                            url: isChecked ? '/api/schedules/card/health/t/' + cardId : '/api/schedules/card/health/f/' + cardId,
+                            type: 'POST'
+                        });
+
+                        if (isChecked) {
+                            this.parentElement.parentElement.style.backgroundColor = '#ccc'; // 체크된 경우 회색으로 변경
+                        } else {
+                            this.parentElement.parentElement.style.backgroundColor = ''; // 체크 해제된 경우 배경색 초기화
+                        }
+
+                    } catch (error) {
+                        alert('완료 상태를 변경하는 중 오류가 발생했습니다.');
+                        this.checked = !isChecked; // 실패 시 체크박스 상태 되돌리기
+                    }
+                });
+
+            } catch (error) {
+                alert('건강 상태를 불러오는 중 오류가 발생했습니다.');
+            }
+        }
 
         $('#scheduleManagementModal').modal('show');
     }
+
+
+
+
+
 
 
 

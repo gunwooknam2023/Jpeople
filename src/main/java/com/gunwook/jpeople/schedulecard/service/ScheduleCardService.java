@@ -126,4 +126,19 @@ public class ScheduleCardService {
     }
 
 
+    public String health(User user, long cardId) {
+        userRepository.findByUsername(user.getUsername()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 후 사용하세요.")
+        );
+
+        ScheduleCard scheduleCard = scheduleCardRepository.findById(cardId).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 카드 입니다.")
+        );
+
+        if(scheduleCard.getHealth()){
+            return "TRUE";
+        } else{
+            return "FALSE";
+        }
+    }
 }
