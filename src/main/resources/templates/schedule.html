@@ -40,19 +40,19 @@
 
 <div class="cardcontainer">
     <div class="row" id="cardContainer"></div>
-<!--    <div class="card" style="width: 13rem;">-->
-<!--        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">-->
-<!--        <div class="card-body">-->
-<!--            <h5 class="card-title">일정 제목</h5>-->
-<!--            <p class="card-text">일정 요약</p>-->
-<!--            <p class="card-date">일정 날짜</p>-->
-<!--            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">-->
-<!--                <div class="progress-bar" style="width: 25%">25%</div>-->
-<!--            </div>-->
-<!--            <br>-->
-<!--            <a href="#" class="btn btn-primary">카드열기</a>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--    <div class="card" style="width: 13rem;">-->
+    <!--        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">-->
+    <!--        <div class="card-body">-->
+    <!--            <h5 class="card-title">일정 제목</h5>-->
+    <!--            <p class="card-text">일정 요약</p>-->
+    <!--            <p class="card-date">일정 날짜</p>-->
+    <!--            <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">-->
+    <!--                <div class="progress-bar" style="width: 25%">25%</div>-->
+    <!--            </div>-->
+    <!--            <br>-->
+    <!--            <a href="#" class="btn btn-primary">카드열기</a>-->
+    <!--        </div>-->
+    <!--    </div>-->
 </div>
 
 <!-- 모달 내용 추가 -->
@@ -109,6 +109,24 @@
     </div>
 </div>
 
+<!--일정관리 카드-->
+<div class="modal fade" id="scheduleManagementModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel3">일정 관리</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 이곳에 카드 정보가 들어갑니다. -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary">추가</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -121,6 +139,93 @@
 </div>
 
 <script>
+
+
+    // AJAX를 사용하여 서버에서 카드 정보를 가져오는 함수
+    function openScheduleManagementModal(scheduleId) {
+        $.ajax({
+            url: '/api/schedules/cards/' + scheduleId,
+            type: 'GET',
+            success: function(data) {
+                displayScheduleCards(data);
+            },
+            error: function() {
+                alert('카드 정보를 불러오는 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+    // 모달에 일정의 카드 정보를 표시하는 함수
+    async function displayScheduleCards(cards) {
+        var modalBody = document.querySelector('#scheduleManagementModal .modal-body');
+        modalBody.innerHTML = ''; // 기존 내용 초기화
+
+        for (const card of cards) {
+            try {
+                var response = await $.ajax({
+                    url: '/api/schedules/cards/health/' + card.id,
+                    type: 'GET'
+                });
+
+                var isChecked = response === 'TRUE';
+
+                var cardItem = document.createElement('div');
+                cardItem.classList.add('card');
+
+                var checkboxId = `card-${card.id}`; // 체크박스의 ID 생성
+
+                cardItem.innerHTML = `
+                <div class="card-body d-flex align-items-center">
+                    <input type="checkbox" id="${checkboxId}" class="mr-2" style="margin-right: 8px" data-id="${card.id}" ${isChecked ? 'checked' : ''}>
+                    <label for="${checkboxId}" class="mb-0 font-weight-bold pl-2">${card.todo}</label>
+                </div>
+            `;
+
+                if (isChecked) {
+                    cardItem.style.backgroundColor = '#ccc'; // 체크된 경우 회색으로 변경
+                }
+
+                modalBody.appendChild(cardItem);
+
+                // 체크박스 상태 변경 이벤트 처리
+                var checkbox = cardItem.querySelector('input[type="checkbox"]');
+                checkbox.addEventListener('change', async function() {
+                    var isChecked = this.checked;
+                    var cardId = this.dataset.id;
+
+                    try {
+                        var response = await $.ajax({
+                            url: isChecked ? '/api/schedules/card/health/t/' + cardId : '/api/schedules/card/health/f/' + cardId,
+                            type: 'POST'
+                        });
+
+                        if (isChecked) {
+                            this.parentElement.parentElement.style.backgroundColor = '#ccc'; // 체크된 경우 회색으로 변경
+                        } else {
+                            this.parentElement.parentElement.style.backgroundColor = ''; // 체크 해제된 경우 배경색 초기화
+                        }
+
+                    } catch (error) {
+                        alert('완료 상태를 변경하는 중 오류가 발생했습니다.');
+                        this.checked = !isChecked; // 실패 시 체크박스 상태 되돌리기
+                    }
+                });
+
+            } catch (error) {
+                alert('건강 상태를 불러오는 중 오류가 발생했습니다.');
+            }
+        }
+
+        $('#scheduleManagementModal').modal('show');
+    }
+
+
+
+
+
+
+
+
     document.addEventListener('DOMContentLoaded', function() {
         // AJAX를 사용하여 서버에서 일정 목록을 가져오는 함수
         function getScheduleData() {
@@ -168,7 +273,7 @@
                             <div class="progress-bar" style="width: ${schedule.progress}%">${schedule.progress}%</div>
                         </div>
                         <br>
-                        <a href="#" class="btn btn-primary">일정관리</a>
+                        <a class="btn btn-primary" onclick="openScheduleManagementModal(${schedule.id})">일정관리</a>
                     </div>
                 `;
 

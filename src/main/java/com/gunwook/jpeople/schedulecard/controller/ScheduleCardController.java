@@ -93,6 +93,20 @@ public class ScheduleCardController {
     }
 
     /**
+     * 완료 상태 체크
+     * @param userDetails 유저 정보
+     * @param card_id 확인할 카드 번호
+     * @return 완료 상태
+     */
+    @GetMapping("/schedules/cards/health/{card_id}")
+    ResponseEntity<String> health(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                  @PathVariable long card_id){
+        String result = scheduleCardService.health(userDetails.getUser(), card_id);
+
+        return ResponseEntity.ok(result);
+    }
+
+    /**
      * 완료 상태 ON
      * @param userDetails 유저 정보
      * @param card_id 처리할 카드 번호
@@ -119,10 +133,4 @@ public class ScheduleCardController {
 
         return ResponseEntity.ok(result);
     }
-
-
-
-
-
-
 }
