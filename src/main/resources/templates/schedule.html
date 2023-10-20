@@ -56,6 +56,8 @@
 </div>
 
 <!-- 모달 내용 추가 -->
+
+<!--카드 생성 모델-->
 <div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -81,6 +83,7 @@
     </div>
 </div>
 
+<!--카드 수정 모델-->
 <div class="modal fade" id="editScheduleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -156,7 +159,7 @@
                         <span class="delete-btn" onclick="deleteCard(this)"></span>
                         <span class="scheduleId" style="display: none">${schedule.id}</span>
                     </div>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH8ZqH2iXvrB3q9HyjAdM7s0hFvO8-Lohp6A&usqp=CAU" class="card-img-top" alt="...">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfTQ8qvT0sRFA3p6vnIpySGUz2c3v07XP6sg&usqp=CAU" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">${schedule.title}</h5>
                         <p class="card-text">${schedule.contents}</p>
@@ -165,7 +168,7 @@
                             <div class="progress-bar" style="width: ${schedule.progress}%">${schedule.progress}%</div>
                         </div>
                         <br>
-                        <a href="#" class="btn btn-primary">카드열기</a>
+                        <a href="#" class="btn btn-primary">일정관리</a>
                     </div>
                 `;
 
