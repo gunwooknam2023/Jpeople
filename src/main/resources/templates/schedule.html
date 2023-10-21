@@ -139,10 +139,60 @@
 </div>
 
 <script>
+    document.querySelector('#scheduleManagementModal .btn-primary').addEventListener('click', function() {
+        // 새로운 텍스트 입력 필드를 생성합니다.
+        var inputElement = document.createElement('input');
+        inputElement.type = 'text';
+        inputElement.classList.add('form-control', 'mb-2');
+        inputElement.placeholder = '할 일을 입력하세요.';
+
+        // 완료 버튼을 생성합니다.
+        var completeButton = document.createElement('button');
+        completeButton.classList.add('btn', 'btn-success', 'mb-2');
+        completeButton.innerText = '완료';
+
+        // 텍스트 입력 필드와 완료 버튼을 모달 내의 modal-body에 추가합니다.
+        var modalBody = document.querySelector('#scheduleManagementModal .modal-body');
+        modalBody.appendChild(inputElement);
+        modalBody.appendChild(completeButton);
+
+        // 완료 버튼을 클릭했을 때의 동작을 설정합니다.
+        completeButton.addEventListener('click', function() {
+            var cardContents = inputElement.value;
+            console.log('Card Contents:', cardContents);
+            var scheduleId = document.getElementById('scheduleManagementModal').dataset.scheduleId; // 여기서 scheduleId 가져오기
+
+
+            // 서버에 POST 요청을 보냅니다.
+            fetch('/api/schedules/' + scheduleId + '/card', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    todo: cardContents
+                })
+            })
+                .then(() => {
+                    console.log('Card 추가가 성공적으로 완료되었습니다.');
+                    openScheduleManagementModal(scheduleId);
+                })
+                .catch(() => {
+                    console.error('카드 추가 중 오류가 발생했습니다.');
+                });
+
+            // 텍스트 입력 필드와 완료 버튼을 제거합니다.
+            inputElement.remove();
+            completeButton.remove();
+        });
+    });
 
 
     // AJAX를 사용하여 서버에서 카드 정보를 가져오는 함수
     function openScheduleManagementModal(scheduleId) {
+        var modalElement = document.getElementById('scheduleManagementModal');
+        modalElement.dataset.scheduleId = scheduleId;
+
         $.ajax({
             url: '/api/schedules/cards/' + scheduleId,
             type: 'GET',
@@ -153,6 +203,7 @@
                 alert('카드 정보를 불러오는 중 오류가 발생했습니다.');
             }
         });
+
     }
 
     // 모달에 일정의 카드 정보를 표시하는 함수
