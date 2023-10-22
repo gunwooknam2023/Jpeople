@@ -27,6 +27,9 @@ public class SchedulePost extends TimeStamped {
     @Column(name = "contents", nullable = false)
     private String contents;
 
+    @Column(name = "percent")
+    private Double percent = 0.0;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -43,6 +46,10 @@ public class SchedulePost extends TimeStamped {
     public void updateSchedulePost(SchedulePostRequestDto schedulePostRequestDto){
         this.title = schedulePostRequestDto.getTitle();
         this.contents = schedulePostRequestDto.getContents();
+    }
+
+    public void setPercent(double persent){
+        this.percent = persent;
     }
 
 }

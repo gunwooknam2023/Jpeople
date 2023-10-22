@@ -320,8 +320,8 @@
                         <h5 class="card-title">${schedule.title}</h5>
                         <p class="card-text">${schedule.contents}</p>
                         <p class="card-date">${formattedDate}</p>
-                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="${schedule.progress}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: ${schedule.progress}%">${schedule.progress}%</div>
+                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="${schedule.percent}" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar" style="width: ${schedule.progress}%">${schedule.percent}%</div>
                         </div>
                         <br>
                         <a class="btn btn-primary" onclick="openScheduleManagementModal(${schedule.id})">일정관리</a>

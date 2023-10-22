@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -81,5 +82,18 @@ public class SchedulePostController {
                                                          @PathVariable Long schedule_id){
         SchedulePostResponseDto schedulePostResponseDto = schedulePostService.getSchedule(userDetails.getUser(), schedule_id);
         return ResponseEntity.ok(schedulePostResponseDto);
+    }
+
+    /**
+     * 일정 퍼센트 조회
+     * @param userDetails 유저 정보
+     * @param schedule_id 퍼센트 조회
+     * @return 퍼센트 정보
+     */
+    @GetMapping("/schedules/{schedule_id}/percent")
+    ResponseEntity<Double> getPercent(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                      @PathVariable Long schedule_id){
+        Double result = schedulePostService.getPercent(userDetails.getUser(), schedule_id);
+        return ResponseEntity.ok(result);
     }
 }
