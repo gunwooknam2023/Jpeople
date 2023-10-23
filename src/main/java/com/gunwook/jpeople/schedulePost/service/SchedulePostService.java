@@ -61,6 +61,7 @@ public class SchedulePostService {
         return "일정이 삭제 되었습니다.";
     }
 
+    @Transactional
     public List<SchedulePostResponseDto> getSchedules(User user) {
         userRepository.findByUsername(user.getUsername()).orElseThrow(
                 () -> new IllegalArgumentException("로그인 후 사용하세요.")
@@ -69,9 +70,12 @@ public class SchedulePostService {
         List<SchedulePost> schedulePosts = schedulePostRepository.findByUserId(user.getId());
         List<SchedulePostResponseDto> schedulePostResponseDtos = new ArrayList<>();
 
+
         for(SchedulePost schedulePost : schedulePosts){
-            SchedulePostResponseDto schedulePostResponseDto = new SchedulePostResponseDto(schedulePost);
-            schedulePostResponseDtos.add(schedulePostResponseDto);
+            Double result = getPercent(schedulePost.getId());
+            schedulePost.setPercent(result);
+
+            schedulePostResponseDtos.add(new SchedulePostResponseDto(schedulePost));
         }
 
         return schedulePostResponseDtos;
@@ -90,16 +94,7 @@ public class SchedulePostService {
         return schedulePostResponseDto;
     }
 
-    @Transactional
-    public Double getPercent(User user, Long scheduleId) {
-        userRepository.findByUsername(user.getUsername()).orElseThrow(
-                () -> new IllegalArgumentException("로그인 후 사용하세요.")
-        );
-
-        SchedulePost schedulePost = schedulePostRepository.findByUserIdAndId(user.getId(), scheduleId).orElseThrow(
-                () -> new IllegalArgumentException("일정이 존재하지 않습니다.")
-        );
-
+    public Double getPercent(Long scheduleId) {
         int complete = 0;
         List<ScheduleCard> scheduleCardList =  scheduleCardRepository.findBySchedulePostId(scheduleId);
         for(ScheduleCard card : scheduleCardList){
@@ -108,8 +103,11 @@ public class SchedulePostService {
             }
         }
 
-        double result = (scheduleCardList.size() / complete) * 100;
-        schedulePost.setPercent(result);
-        return result;
+        if(complete == 0 || scheduleCardList.isEmpty()){
+            return 0.0;
+        }
+
+        double result = ((double) complete/scheduleCardList.size() * 100);
+        return Double.parseDouble(String.format("%.1f", result));
     }
 }

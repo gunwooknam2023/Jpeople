@@ -86,14 +86,12 @@ public class SchedulePostController {
 
     /**
      * 일정 퍼센트 조회
-     * @param userDetails 유저 정보
      * @param schedule_id 퍼센트 조회
      * @return 퍼센트 정보
      */
     @GetMapping("/schedules/{schedule_id}/percent")
-    ResponseEntity<Double> getPercent(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                      @PathVariable Long schedule_id){
-        Double result = schedulePostService.getPercent(userDetails.getUser(), schedule_id);
+    ResponseEntity<Double> getPercent(@PathVariable Long schedule_id){
+        Double result = schedulePostService.getPercent(schedule_id);
         return ResponseEntity.ok(result);
     }
 }

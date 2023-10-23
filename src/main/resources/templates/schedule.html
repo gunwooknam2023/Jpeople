@@ -121,7 +121,7 @@
                 <!-- 이곳에 카드 정보가 들어갑니다. -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">닫기</button>
                 <button type="button" class="btn btn-primary">추가</button>
             </div>
         </div>
@@ -293,6 +293,21 @@
             });
         }
 
+        // 퍼센트별 이미지 가져오기
+        function getProgressImage(percent) {
+            if (percent === 0) {
+                return '/images/0.jpg';
+            } else if (percent <= 40) {
+                return '/images/25.jpg';
+            } else if (percent <= 60) {
+                return '/images/50.jpg';
+            } else if (percent < 100) {
+                return '/images/75.png';
+            } else {
+                return '/images/100.jpg';
+            }
+        }
+
         // 일정 목록을 화면에 출력하는 함수
         function displaySchedules(schedules) {
             var cardContainer = document.querySelector('#cardContainer');
@@ -308,6 +323,22 @@
                 var createdAt = new Date(schedule.createdAt);
                 var formattedDate = createdAt.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
 
+                // 색상 클래스 설정
+                var colorClass = '';
+                if (schedule.percent <= 25) {
+                    colorClass = 'bg-danger';
+                } else if (schedule.percent <= 50) {
+                    colorClass = 'bg-warning';
+                } else if (schedule.percent < 100) {
+                    colorClass = 'bg-success';
+                } else {
+                    colorClass = 'bg-primary';
+                }
+
+                var progressBarWidth = schedule.percent === 100 ? '100%' : `${schedule.percent}%`;
+                var progressText = schedule.percent === 100 ? '완료' : `${schedule.percent}%`;
+
+                var progressImage = getProgressImage(schedule.percent);
 
                 card.innerHTML = `
                     <div class="card-header" style="position: relative;">
@@ -315,13 +346,15 @@
                         <span class="delete-btn" onclick="deleteCard(this)"></span>
                         <span class="scheduleId" style="display: none">${schedule.id}</span>
                     </div>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfTQ8qvT0sRFA3p6vnIpySGUz2c3v07XP6sg&usqp=CAU" class="card-img-top" alt="...">
+                    <div class="card-img-container">
+                        <img src="${progressImage}" class="card-img-top" alt="...">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">${schedule.title}</h5>
                         <p class="card-text">${schedule.contents}</p>
                         <p class="card-date">${formattedDate}</p>
                         <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="${schedule.percent}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar" style="width: ${schedule.progress}%">${schedule.percent}%</div>
+                            <div class="progress-bar ${colorClass}" style="width: ${progressBarWidth}">${progressText}</div>
                         </div>
                         <br>
                         <a class="btn btn-primary" onclick="openScheduleManagementModal(${schedule.id})">일정관리</a>
