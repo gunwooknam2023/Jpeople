@@ -37,16 +37,16 @@
 
 <div class="bottom">
     <!-- 유저 정보를 출력할 공간 -->
-    <div class="fixed-info">
+    <div class="fixed-info" style="padding-top: 30px">
+        <span class="info-item">조회수</span>
+        <span class="info-item">좋아요</span>
         <span class="info-item">제목</span>
-        <span class="info-item">닉네임</span>
-        <span class="info-item">작성시간</span>
+        <span class="info-item">작성자</span>
+        <span class="info-item">작성일자</span>
     </div>
     <div class="user-info-list">
         <div class="post-info">
-            <span class="info-item post-title">제목</span>
-            <span class="info-item post-nickname">닉네임</span>
-            <span class="info-item post-time">작성시간</span>
+
         </div>
         <!-- 여기에 각 페이지별로 유저 정보가 출력될 것입니다. -->
     </div>
@@ -211,15 +211,28 @@
                 title: post.title,
                 contents: post.contents
             };
-            postDiv.innerHTML = `
-                    <div class="post-info">
-                        <span class="info-item post-title">
-                                <a href="/api/view/boarddetail?id=${post.id}">${post.title}</a>
-                        </span>
-                        <span class="info-item">${post.nickname}</span>
-                        <span class="info-item">${timeAgoString}</span>
-                    </div>
 
+            const MAX_TITLE_LENGTH = 15; // 최대 길이 설정
+            // 제목 길이가 15자를 초과하면 생략 부호를 추가
+            const truncatedTitle = post.title.length > MAX_TITLE_LENGTH ? post.title.slice(0, MAX_TITLE_LENGTH) + '...' : post.title;
+
+            const viewCnt = post.viewCnt;
+            const goodLike = post.goodLike;
+
+            postDiv.innerHTML = `
+                         <div class="post-info" style="display: flex; align-items: center;">
+                            <span class="info-item post-views" style="margin-right: 10px;">
+                                <img src="/images/check.png" alt="check icon" style="width: 20px; height: 20px; margin-right: 5px;">${viewCnt}
+                            </span>
+                            <span class="info-item post-likes" style="margin-right: 10px;">
+                                <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px; margin-right: 5px;">${goodLike}
+                            </span>
+                            <span class="info-item post-title">
+                                <a href="/api/view/boarddetail?id=${post.id}">${truncatedTitle}</a>
+                            </span>
+                            <span class="info-item post-nickname">${post.nickname}</span>
+                            <span class="info-item post-time">${timeAgoString}</span>
+                        </div>
         `;
             userInfoList.appendChild(postDiv);
         });

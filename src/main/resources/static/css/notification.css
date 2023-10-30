@@ -132,24 +132,11 @@
 .info-item {
     flex: 1;
     text-align: center;
-    font-size: 1.8rem;
-    max-width: 25%;
+    font-size: 1.5rem;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin: 0 200px; /* 좌우 여백 조절 */
-}
-
-.post-title {
-    max-width: 150%;
-}
-
-.post-nickname {
-    max-width: 20%;
-}
-
-.post-time {
-    max-width: 100%;
+    margin: 0 10px; /* 좌우 여백 조절 */
+    white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+    text-overflow: clip;
 }
 
 /*수정된 코드 */

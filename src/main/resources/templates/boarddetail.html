@@ -43,8 +43,8 @@
     <div class="viewCnt">
         조회수: <span id="viewCnts"></span>
     </div>
-    <div class="like">
-        좋아요: <span id="likes"></span>
+    <div class="goodLike">
+        좋아요: <span id="goodLikes"></span>
     </div>
 </div>
 <!-- 페이지 내용 (중앙 부분) -->
@@ -118,7 +118,7 @@
                 document.getElementById('titles').textContent = postInfo.title;
                 document.getElementById('contentss').textContent = postInfo.contents;
                 document.getElementById('viewCnts').textContent = postInfo.viewCnt;
-                document.getElementById('likes').textContent = postInfo.like;
+                document.getElementById('goodLikes').textContent = postInfo.goodLike;
             })
             .catch(error => console.error('Error fetching post:', error));
     });
