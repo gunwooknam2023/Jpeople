@@ -27,24 +27,32 @@
     </div>
 </div>
 
-<div class="content">
-    <div class="title">
-        제목: <span id="titles"></span>
+<div class="content" style="position: relative; background-color: #FAFAFA">
+    <div class="title" style="margin-bottom: 20px">
+        <span id="titles" style="font-weight: bolder; font-size: 1.8em" ></span>
     </div>
-    <div class="contents">
-        내용: <span id="contentss"></span>
+
+    <div style="text-align: right; padding-right: 15px">
+        <span id="nicknames" style="font-weight: bold"></span><br>
+        <span id="createdAts"></span>
     </div>
-    <div class="nickname">
-        작성자: <span id="nicknames"></span>
+
+    <div class="contents" style="text-align: left; width: 500px; margin: 50px auto;">
+        <span id="contentss"></span>
     </div>
-    <div class="createdAt">
-        작성시간: <span id="createdAts"></span>
+
+    <div style="display: flex; align-items: center; justify-content: flex-end; padding-right: 15px">
+            <img src="/images/check.png" alt="check icon" style="width: 20px; height: 20px; margin-right: 5px;">
+        <span id="viewCnts"></span>
+            <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px; margin-left: 10px; margin-right: 5px;">
+        <span id="goodLikes"></span>
     </div>
-    <div class="viewCnt">
-        조회수: <span id="viewCnts"></span>
-    </div>
-    <div class="goodLike">
-        좋아요: <span id="goodLikes"></span>
+
+</div>
+
+<div class="comment" style="margin-top: 30px; background-color: #999999; border-radius: 30px; /* 모서리 둥글게 설정 */">
+    <div>
+
     </div>
 </div>
 <!-- 페이지 내용 (중앙 부분) -->
@@ -59,6 +67,84 @@
 </div>
 
 <script>
+
+    // 댓글 작성 시간을 표시하는 함수
+    function getTimeAgoString(commentTime) {
+        const now = new Date();
+        const commentDate = new Date(commentTime);
+        const timeDiff = now - commentDate;
+        const seconds = Math.floor(timeDiff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const months = Math.floor(days / 30);
+        const years = Math.floor(months / 12);
+
+        if (years > 0) {
+            return years + '년 전';
+        } else if (months > 0) {
+            return months + '달 전';
+        } else if (days > 0) {
+            return days + '일 전';
+        } else if (hours > 0) {
+            return hours + '시간 전';
+        } else if (minutes > 0) {
+            return minutes + '분 전';
+        } else {
+            return '방금 전';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const post_id = urlParams.get('id');
+
+
+        fetch(`/api/posts/${post_id}`)
+            .then(response => response.json())
+            .then(postInfo => {
+                // 이전 코드...
+
+                // 가져온 댓글 정보를 화면에 표시
+                const commentList = postInfo.commentResponseDtoList.reverse();
+                const commentContainer = document.querySelector('.comment > div');
+
+                commentList.forEach(comment => {
+                    addCommentToDOM(comment);
+                });
+            })
+            .catch(error => console.error('Error fetching post:', error));
+    });
+
+    function addCommentToDOM(comment) {
+        const commentContainer = document.querySelector('.comment > div');
+
+        const commentElement = document.createElement('div');
+        commentElement.classList.add('comment-item');
+
+        const timeAgoString = getTimeAgoString(comment.createdAt);
+
+        commentElement.innerHTML = `
+        <div style="padding-bottom: 20px; background-color: #FAFAFA">
+        <div style="text-align: left; padding-left: 20px;">
+            <span style="font-weight: bold">${comment.nickname}</span><br>
+            <span>${timeAgoString}</span><br>
+        </div>
+
+         <div style="display: flex; align-items: center; text-align: left; padding-left: 20px;">
+            <span>${comment.contents}</span>
+            <div style="display: flex; align-items: center;">
+                <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px;">
+                <span>${comment.like}</span>
+            </div>
+        </div>
+    </div>
+    `;
+
+        commentContainer.appendChild(commentElement);
+    }
+
+
     // jpeople 클릭시 홈이동
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
