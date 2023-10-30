@@ -15,14 +15,33 @@
 }
 
 
-/* 상단바 스타일 */
+/* 네비게이션바 스타일 */
 .navbar {
-    background-color: #888; /* 회색 배경색 */
+    background-color: #fff; /* 흰색 배경색 */
     padding: 10px; /* 위 아래 여백과 좌우 여백을 줍니다 */
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 60px; /* 여백을 추가합니다. 필요에 따라 조절하세요. */
+    position: fixed; /* 고정 위치 설정 */
+    top: 0; /* 화면 맨 위에 고정 */
+    width: 100%; /* 네비게이션 바 전체 너비 */
+    z-index: 1000; /* 다른 요소들 위에 표시되도록 설정 */
+}
+
+/* 네비게이션바 하단에 검은색 구분선 스타일 */
+.navbar::after {
+    content: ""; /* 가상 요소 생성 */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%; /* 네비게이션 바 전체 너비 */
+    height: 1px; /* 높이를 조절하여 구분선의 두께를 설정하세요 */
+    background-color: #999; /* 검은색 구분선 */
+}
+
+/* .navbar + .content가 구분선과 겹치지 않도록 여백 조절 */
+.content {
+    margin-top: 2%; /* 구분선의 높이만큼 컨텐츠를 아래로 내림 */
 }
 
 /* J PEOPLE 스타일 */
@@ -44,13 +63,14 @@
 /* 하단바 스타일 */
 .footer {
     text-align: center;
-    background-color: #888; /* 회색 배경색 */
+    background-color: #fff; /* 흰색 배경색 */
     padding: 10px;
     position: fixed;
     width: 100%;
     bottom: 0;
     left: 0; /* 좌측 여백 없애기 */
-    font-weight: bold;
+    font-weight: bolder;
+    border-top: 1px solid #999; /* 상단에 검은색 밑줄 추가 */
 }
 
 /* 글씨 크기 늘리기 */
@@ -83,7 +103,9 @@
 .board-section {
     width: 80%; /* 가로 크기를 100%로 설정합니다. */
     height: 105%; /* 세로 크기를 100%로 설정합니다. */
-    background-color: #f0f0f0; /* 배경색을 지정합니다. */
+    background-color: #E6E6E6; /* 배경색을 지정합니다. */
+    border-radius: 30px; /* 테두리 둥글기를 설정합니다. */
+    border: 1px solid #D8D8D8; /* 테두리 색상을 지정합니다. */
     /* 다른 스타일링을 원하시면 여기에 추가하세요. */
 }
 
@@ -96,7 +118,9 @@
 .notifications-section {
     width: 70%; /* 가로 크기를 100%로 설정합니다. */
     height: 105%; /* 세로 크기를 100%로 설정합니다. */
-    background-color: #f0f0f0; /* 배경색을 지정합니다. */
+    background-color: #E6E6E6; /* 배경색을 지정합니다. */
+    border-radius: 30px; /* 테두리 둥글기를 설정합니다. */
+    border: 1px solid #D8D8D8; /* 테두리 색상을 지정합니다. */
     /* 다른 스타일링을 원하시면 여기에 추가하세요. */
 }
 
@@ -138,3 +162,8 @@ h3 a {
     cursor: pointer;
 }
 
+/* 아이콘 스타일 */
+.navbar-left img {
+    height: 40px; /* 원하는 크기로 조절하세요 */
+    margin-right: 2px; /* 아이콘과 텍스트 사이의 간격 조절 */
+}
