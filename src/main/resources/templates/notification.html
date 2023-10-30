@@ -166,6 +166,33 @@
         }
     }
 
+    // 게시물 작성 시간을 표시하는 함수
+    function getTimeAgoString(postTime) {
+        const now = new Date();
+        const postDate = new Date(postTime);
+        const timeDiff = now - postDate;
+        const seconds = Math.floor(timeDiff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        const months = Math.floor(days / 30);
+        const years = Math.floor(months / 12);
+
+        if (years > 0) {
+            return years + '년 전';
+        } else if (months > 0) {
+            return months + '달 전';
+        } else if (days > 0) {
+            return days + '일 전';
+        } else if (hours > 0) {
+            return hours + '시간 전';
+        } else if (minutes > 0) {
+            return minutes + '분 전';
+        } else {
+            return '방금 전';
+        }
+    }
+
     function renderPostsForPage(page) {
         const startIndex = (page - 1) * userPerPage;
         const endIndex = startIndex + userPerPage;
@@ -177,11 +204,7 @@
             const postDiv = document.createElement('div');
             postDiv.classList.add('user-info');
 
-            const dateParts = post.createdAt.split('T');
-            const date = dateParts[0];
-            const time = dateParts[1].split('.')[0]; // Remove milliseconds
-
-            const formattedDateTime = `${date} ${time}`;
+            const timeAgoString = getTimeAgoString(post.createdAt);
 
             const postData = {
                 id: post.id,
@@ -194,7 +217,7 @@
                                 <a href="/api/view/boarddetail?id=${post.id}">${post.title}</a>
                         </span>
                         <span class="info-item">${post.nickname}</span>
-                        <span class="info-item">${formattedDateTime}</span>
+                        <span class="info-item">${timeAgoString}</span>
                     </div>
 
         `;
