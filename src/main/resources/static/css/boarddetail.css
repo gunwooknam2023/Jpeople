@@ -99,16 +99,26 @@
 
 .content {
     text-align: center; /* 중앙 정렬 */
-    max-width: 800px; /* 최대 너비 설정 */
-    margin: 0 auto; /* 가운데 정렬을 위한 왼쪽, 오른쪽 마진을 자동으로 설정 */
+    max-width: 1000px; /* 최대 너비 설정 */
+    max-height: none;
+    margin: 30px auto; /* 가운데 정렬을 위한 왼쪽, 오른쪽 마진을 자동으로 설정 */
+    padding-top: 20px;
+    border-radius: 30px; /* 모서리 둥글게 설정 */
 }
 
 .content div {
-    font-size: 3.5em; /* 글씨 크기 조절 */
+    font-size: 1.5em; /* 글씨 크기 조절 */
 }
 
 /* 아이콘 스타일 */
 .navbar-left img {
     height: 40px; /* 원하는 크기로 조절하세요 */
     margin-right: 2px; /* 아이콘과 텍스트 사이의 간격 조절 */
+}
+
+.comment {
+    text-align: center; /* 중앙 정렬 */
+    max-width: 1000px; /* 최대 너비 설정 */
+    max-height: none;
+    margin: 0 auto 60px; /* 가운데 정렬을 위한 왼쪽, 오른쪽 마진을 자동으로 설정 */
 }
