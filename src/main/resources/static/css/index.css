@@ -82,7 +82,7 @@
 
 .board-section {
     width: 80%; /* 가로 크기를 100%로 설정합니다. */
-    height: 100%; /* 세로 크기를 100%로 설정합니다. */
+    height: 105%; /* 세로 크기를 100%로 설정합니다. */
     background-color: #f0f0f0; /* 배경색을 지정합니다. */
     /* 다른 스타일링을 원하시면 여기에 추가하세요. */
 }
@@ -95,7 +95,7 @@
 
 .notifications-section {
     width: 70%; /* 가로 크기를 100%로 설정합니다. */
-    height: 100%; /* 세로 크기를 100%로 설정합니다. */
+    height: 105%; /* 세로 크기를 100%로 설정합니다. */
     background-color: #f0f0f0; /* 배경색을 지정합니다. */
     /* 다른 스타일링을 원하시면 여기에 추가하세요. */
 }
@@ -134,4 +134,7 @@ h3 a {
     padding-right: 20%;
 }
 
+.post-title:hover {
+    cursor: pointer;
+}
 
