@@ -29,13 +29,13 @@
 
 <div class="content">
     <div class="board-section text-center">
-        <h3 style="padding-left: 10px; font-size: 50px; font-weight: bold;"><a href="/api/view/board">자유게시판</a></h3>
-        <ul class="latest-posts" style="font-size: 30px">
+        <h3 style="padding-left: 10px; font-size: 50px; font-weight: bold; padding-bottom: 25px"><a href="/api/view/board">자유게시판</a></h3>
+        <ul class="latest-posts" style="font-size: 25px">
         </ul>
     </div>
     <div class="notifications-section text-center">
-        <h3 style="padding-left: 10px; font-size: 50px; font-weight: bold;"><a href="/api/view/notification">공지사항</a></h3>
-        <ul class="latest-notification" style="font-size: 30px">
+        <h3 style="padding-left: 10px; font-size: 50px; font-weight: bold; padding-bottom: 25px"><a href="/api/view/notification">공지사항</a></h3>
+        <ul class="latest-notification" style="font-size: 25px">
         </ul>
     </div>
 </div>
@@ -112,6 +112,27 @@
         }
     }
 
+    // 게시물 작성 시간을 표시하는 함수
+    function getTimeAgoString(postTime) {
+        const now = new Date();
+        const postDate = new Date(postTime);
+        const timeDiff = now - postDate;
+        const seconds = Math.floor(timeDiff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (days > 0) {
+            return days + '일 전';
+        } else if (hours > 0) {
+            return hours + '시간 전';
+        } else if (minutes > 0) {
+            return minutes + '분 전';
+        } else {
+            return '방금 전';
+        }
+    }
+
 
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
@@ -171,7 +192,8 @@
                             showLoginConfirmation();
                         });
                     }
-                    titleLink.textContent = post.title;
+                    const truncatedTitle = post.title.length > 8 ? post.title.substring(0, 8) + '...' : post.title;
+                    titleLink.textContent = truncatedTitle;
                     postTitle.appendChild(titleLink);
 
 
@@ -179,9 +201,15 @@
                     nickname.classList.add('info-item', 'post-nickname');
                     nickname.textContent = post.nickname;
 
+                    // 게시물 작성 시간 추가
+                    const postTime = document.createElement('span');
+                    postTime.classList.add('info-item', 'post-time');
+                    postTime.textContent = getTimeAgoString(post.createdAt); // created_at은 게시물 작성 시간 정보입니다.
+
 
                     postInfo.appendChild(postTitle);
                     postInfo.appendChild(nickname);
+                    postInfo.appendChild(postTime); // 게시물 작성 시간을 추가합니다.
 
                     listItem.appendChild(postInfo);
                     latestPostsList.appendChild(listItem);
@@ -210,16 +238,23 @@
                             showLoginConfirmation();
                         });
                     }
-                    titleLink.textContent = post.title;
+                    const truncatedTitle = post.title.length > 8 ? post.title.substring(0, 8) + '...' : post.title;
+                    titleLink.textContent = truncatedTitle;
                     postTitle.appendChild(titleLink);
 
                     const nickname = document.createElement('span');
                     nickname.classList.add('info-item', 'post-nickname');
                     nickname.textContent = post.nickname;
 
+                    // 게시물 작성 시간 추가
+                    const postTime = document.createElement('span');
+                    postTime.classList.add('info-item', 'post-time');
+                    postTime.textContent = getTimeAgoString(post.createdAt); // created_at은 게시물 작성 시간 정보입니다.
+
 
                     postInfo.appendChild(postTitle);
                     postInfo.appendChild(nickname);
+                    postInfo.appendChild(postTime); // 게시물 작성 시간을 추가합니다.
 
                     listItem.appendChild(postInfo);
                     latestNotificationList.appendChild(listItem);
