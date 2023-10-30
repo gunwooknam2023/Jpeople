@@ -18,7 +18,7 @@ public class PostResponseDto {
     private Long user_id;
     private String username;
     private String nickname;
-    private Long like;
+    private Long goodLike;
     private Long viewCnt;
     private Category category;
     private LocalDateTime createdAt;
@@ -34,7 +34,7 @@ public class PostResponseDto {
         this.user_id = post.getUser().getId();
         this.username = post.getUser().getUsername();
         this.nickname = post.getUser().getNickname();
-        this.like = post.getGoodLike();
+        this.goodLike = post.getGoodLike();
         this.viewCnt = post.getViewCnt();
         this.category = post.getCategory();
         this.createdAt = post.getCreatedAt();
