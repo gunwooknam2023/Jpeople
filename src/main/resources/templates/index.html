@@ -50,20 +50,20 @@
 <script>
 
     // 페이지의 자유게시판, 공지사항 클릭시 로그인 요청
-    document.addEventListener('DOMContentLoaded', function() {
-        const boardSection = document.querySelector('.board-section');
-        const notificationSection = document.querySelector('.notifications-section');
-
-        boardSection.addEventListener('click', function(e) {
-            e.preventDefault();
-            handleLinkClick('/api/view/board');
-        });
-
-        notificationSection.addEventListener('click', function(e) {
-            e.preventDefault();
-            handleLinkClick('/api/view/notification');
-        });
-    });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const boardSection = document.querySelector('.board-section');
+    //     const notificationSection = document.querySelector('.notifications-section');
+    //
+    //     boardSection.addEventListener('click', function(e) {
+    //         e.preventDefault();
+    //         handleLinkClick('/api/view/board');
+    //     });
+    //
+    //     notificationSection.addEventListener('click', function(e) {
+    //         e.preventDefault();
+    //         handleLinkClick('/api/view/notification');
+    //     });
+    // });
 
     // 네비게이션바의 공지사항, 자유게시판, 일정관리, 마이페이지를 눌렀을때 로그인 요청
     document.addEventListener('DOMContentLoaded', function() {
@@ -156,12 +156,21 @@
                 data.slice(0, 7).forEach(post => {
                     const listItem = document.createElement('li');
                     const postInfo = document.createElement('div');
+                    var token = Cookies.get('Authorization');
                     postInfo.classList.add('post-info');
 
                     const postTitle = document.createElement('span');
                     postTitle.classList.add('info-item', 'post-title', 'font-weight-bold');
                     const titleLink = document.createElement('a');
-                    titleLink.href = '/api/view/boarddetail?id=' + post.id;
+
+                    if(token) {
+                        titleLink.href = '/api/view/boarddetail?id=' + post.id;
+                    } else{
+                        titleLink.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            showLoginConfirmation();
+                        });
+                    }
                     titleLink.textContent = post.title;
                     postTitle.appendChild(titleLink);
 
@@ -188,14 +197,21 @@
                     const listItem = document.createElement('li');
                     const postInfo = document.createElement('div');
                     postInfo.classList.add('post-info');
+                    var token = Cookies.get('Authorization');
 
                     const postTitle = document.createElement('span');
                     postTitle.classList.add('info-item', 'post-title', 'font-weight-bold');
                     const titleLink = document.createElement('a');
-                    titleLink.href = '/api/view/boarddetail?id=' + post.id;
+                    if(token) {
+                        titleLink.href = '/api/view/boarddetail?id=' + post.id;
+                    } else{
+                        titleLink.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            showLoginConfirmation();
+                        });
+                    }
                     titleLink.textContent = post.title;
                     postTitle.appendChild(titleLink);
-
 
                     const nickname = document.createElement('span');
                     nickname.classList.add('info-item', 'post-nickname');
