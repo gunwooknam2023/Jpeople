@@ -187,3 +187,9 @@
     height: 40px; /* 원하는 크기로 조절하세요 */
     margin-right: 2px; /* 아이콘과 텍스트 사이의 간격 조절 */
 }
+
+.post-info {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
