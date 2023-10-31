@@ -27,6 +27,7 @@
     </div>
 </div>
 
+<!--게시글 내용-->
 <div class="content" style="position: relative; background-color: #FAFAFA">
     <div class="title" style="margin-bottom: 20px">
         <span id="titles" style="font-weight: bolder; font-size: 1.8em" ></span>
@@ -50,10 +51,17 @@
 
 </div>
 
+<!--댓글 목록-->
 <div class="comment" style="margin-top: 30px; background-color: #999999; border-radius: 30px; /* 모서리 둥글게 설정 */">
     <div>
 
     </div>
+</div>
+
+<!--댓글 입력-->
+<div class="comment-input" style="margin-top: 10px; text-align: center; border-radius: 30px;  margin-bottom: 100px;">
+    <input type="text" id="commentInput" style="width: 950px; height: 30px; border-radius: 15px; border: none; outline: none; padding: 5px; background-color:#F2F2F2" placeholder="댓글을 입력하세요">
+    <button style="background-color: #555555; border: none; color: white; padding: 5px 10px; border-radius: 15px; cursor: pointer;" onclick="createComments()">확인</button>
 </div>
 <!-- 페이지 내용 (중앙 부분) -->
 
@@ -67,6 +75,49 @@
 </div>
 
 <script>
+
+    function createComments() {
+        const commentInput = document.getElementById('commentInput');
+        const commentText = commentInput.value.trim();
+
+        if (commentText === '') {
+            alert('댓글 내용을 입력하세요.');
+            return;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const post_id = urlParams.get('id');
+
+        const commentRequestDto = {
+            contents: commentText
+        };
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', `/api/comments/${post_id}`, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                var responseText = xhr.responseText;
+                alert(responseText);
+
+                // 댓글 작성 성공 시 화면 갱신 등 필요한 작업 수행
+                // 예: 댓글 목록 다시 불러오기 등
+                if (responseText === "댓글이 생성되었습니다.") {
+                    location.reload();
+                    // 댓글이 생성되었을 때 수행할 작업
+                    // 예: 화면에 댓글 추가, 댓글 카운트 업데이트 등
+                }
+            } else {
+                console.error('Error creating comment:', xhr.status, xhr.statusText);
+            }
+        };
+
+        xhr.send(JSON.stringify(commentRequestDto));
+    }
+
+
 
     function likePost() {
         const urlParams = new URLSearchParams(window.location.search);
