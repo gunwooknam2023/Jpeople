@@ -44,7 +44,7 @@
     <div style="display: flex; align-items: center; justify-content: flex-end; padding-right: 15px">
             <img src="/images/check.png" alt="check icon" style="width: 20px; height: 20px; margin-right: 5px;">
         <span id="viewCnts"></span>
-            <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px; margin-left: 10px; margin-right: 5px;">
+        <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px; margin-left: 10px; margin-right: 5px; cursor: pointer;" onclick="likePost()">
         <span id="goodLikes"></span>
     </div>
 
@@ -67,6 +67,50 @@
 </div>
 
 <script>
+
+    function likePost() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const post_id = urlParams.get('id');
+
+        // 좋아요 요청 보내기
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', `/api/posts/goodlike/${post_id}`, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                var responseText = xhr.responseText;
+                alert(responseText); // 서버에서 반환한 문자열을 팝업으로 띄움
+
+                if (responseText === "게시글에 좋아요를 누르셨습니다.") {
+                    const goodLikesElement = document.getElementById('goodLikes');
+                    const currentGoodLikes = parseInt(goodLikesElement.textContent);
+
+                    // 좋아요를 눌렀을 때, 좋아요 수를 1 증가시킵니다.
+                    goodLikesElement.textContent = currentGoodLikes + 1;
+                } else if (responseText === "게시글의 좋아요를 취소하셨습니다.") {
+                    const goodLikesElement = document.getElementById('goodLikes');
+                    const currentGoodLikes = parseInt(goodLikesElement.textContent);
+
+                    // 좋아요를 취소했을 때, 좋아요 수를 1 감소시킵니다.
+                    goodLikesElement.textContent = currentGoodLikes - 1;
+                } else if (responseText === "본인의 게시글에는 좋아요를 누를수없습니다.") {
+                    alert("본인의 게시글에는 좋아요를 누를 수 없습니다.");
+                }
+            } else {
+                alert('본인의 게시글에는 좋아요를 누를 수 없습니다.');
+            }
+        };
+
+
+        xhr.send();
+    }
+
+
+
+
+
 
     // 댓글 작성 시간을 표시하는 함수
     function getTimeAgoString(commentTime) {
