@@ -178,14 +178,46 @@
          <div style="display: flex; align-items: center; text-align: left; padding-left: 20px;">
             <span>${comment.contents}</span>
             <div style="display: flex; align-items: center;">
-                <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px;">
-                <span>${comment.like}</span>
+                <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px; cursor: pointer;" onclick="likeComment(${comment.id})">
+                <span id="likeCount_${comment.id}">${comment.like}</span>
             </div>
         </div>
     </div>
     `;
 
         commentContainer.appendChild(commentElement);
+    }
+
+    function likeComment(comment_id) {
+        // 좋아요 요청 보내기
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', `/api/comments/goodlike/${comment_id}`, true);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onload = function () {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                var responseText = xhr.responseText;
+                alert(responseText); // 서버에서 반환한 문자열을 팝업으로 띄움
+
+                // 좋아요 수 업데이트
+                if (responseText === "댓글에 좋아요를 누르셨습니다.") {
+                    const likeCountElement = document.getElementById(`likeCount_${comment_id}`);
+                    const currentLikeCount = parseInt(likeCountElement.textContent);
+                    likeCountElement.textContent = currentLikeCount + 1;
+                } else if (responseText === "댓글의 좋아요를 취소하셨습니다.") {
+                    const likeCountElement = document.getElementById(`likeCount_${comment_id}`);
+                    const currentLikeCount = parseInt(likeCountElement.textContent);
+                    likeCountElement.textContent = currentLikeCount - 1;
+                } else if (responseText === "본인의 댓글에는 좋아요를 누를수없습니다.") {
+                    alert("본인의 댓글에는 좋아요를 누를 수 없습니다.");
+                }
+            } else {
+                alert('본인의 댓글에는 좋아요를 누를 수 없습니다.');
+            }
+        };
+
+        xhr.send();
     }
 
 
