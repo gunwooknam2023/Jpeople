@@ -27,9 +27,13 @@
     </div>
 </div>
 
-<div class="button-container">
+<div style="background-color: gray">
+
+</div>
+
+<div class="button-container" style="margin-top: 20px;">
     <div>
-        <button type="button" class="btn btn-outline-light profile">프로필</button>
+        <button type="button" class="btn btn-outline-light profile" >프로필</button>
     </div>
     <div>
         <button type="button" class="btn btn-outline-light posts">작성한 게시글</button>
@@ -37,14 +41,30 @@
     <div>
         <button type="button" class="btn btn-outline-light comments">작성한 댓글</button>
     </div>
+
 </div>
 
+<div style="background-color: #F2F2F2; border-radius: 15%; width : 25%; display: flex; justify-content: center; align-items: center; margin: 30px auto 0;">
 <div class="profile-container">
-    <h2>프로필 정보</h2>
-    <div class="profile-content">
+    <div class="profile-content" style="font-size: 20px">
         <!-- 프로필 정보를 여기에 표시 -->
     </div>
 </div>
+</div>
+
+
+<div class="bottom" style="display: flex; justify-content: center; align-items: center; font-size:20px">
+    <div class="user-info-list">
+        <div class="post-info">
+            <!-- 여기에 각 페이지별로 유저 정보가 출력될 것입니다. -->
+        </div>
+    </div>
+</div>
+<!-- 페이지 네비게이션 -->
+<div class="pagination" style="justify-content: center; margin-top: 20px">
+    <!-- 페이지 번호 버튼들이 여기에 생성될 것입니다. -->
+</div>
+
 
 <!-- 페이지 내용 (중앙 부분) -->
 <!-- 여기에 내용 추가 -->
@@ -54,29 +74,6 @@
     대표: 남건욱
 </div>
 
-<div class="bottom">
-    <!-- 유저 정보를 출력할 공간 -->
-    <div class="fixed-info">
-        <span class="info-item">제목</span>
-        <span class="info-item">닉네임</span>
-        <span class="info-item">작성시간</span>
-    </div>
-    <div class="user-info-list">
-        <div class="post-info">
-            <span class="info-item post-title">제목</span>
-            <span class="info-item post-nickname">닉네임</span>
-            <span class="info-item post-time">작성시간</span>
-        </div>
-        <!-- 여기에 각 페이지별로 유저 정보가 출력될 것입니다. -->
-    </div>
-    <!-- 페이지 네비게이션 -->
-    <div class="pagination">
-        <!-- 페이지 번호 버튼들이 여기에 생성될 것입니다. -->
-    </div>
-</div>
-
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
@@ -84,15 +81,46 @@
         const logoutButton = document.querySelector('.logout-button');
         const profileButton = document.querySelector('.profile') // 프로필 버튼 선택
         const postsButton = document.querySelector('.posts'); // 작성한 게시글 버튼 선택
-        const commentsButton = document.querySelector('.comments'); // 작성한 게시글 버튼 선택
+        const commentsButton = document.querySelector('.comments'); // 작성한 댓글 버튼 선택
 
         profileButton.addEventListener('click', function() {
             loadProfileInformation();
+            hidePostsAndComments(); // 작성한 게시글 목록과 댓글 목록을 숨깁니다.
         });
 
         postsButton.addEventListener('click', function() {
-            fetchAndRenderPosts(); // 버튼을 클릭하면 fetchAndRenderPosts 함수 실행
+            fetchAndRenderPosts();
+            hideProfileAndComments(); // 프로필 정보와 작성한 댓글 목록을 숨깁니다.
         });
+
+        commentsButton.addEventListener('click', function() {
+            fetchAndRenderComments();
+            hideProfileAndPosts(); // 프로필 정보와 작성한 게시글 목록을 숨깁니다.
+        });
+
+        function hideProfileAndPosts() {
+            const profileContainer = document.querySelector('.profile-container');
+            const userInfoList = document.querySelector('.user-info-list');
+
+            profileContainer.style.display = 'none';
+            userInfoList.style.display = 'block';
+        }
+
+        function hideProfileAndComments() {
+            const profileContainer = document.querySelector('.profile-container');
+            const commentsContainer = document.querySelector('.comments-container');
+
+            profileContainer.style.display = 'none';
+            commentsContainer.style.display = 'block';
+        }
+
+        function hidePostsAndComments() {
+            const userInfoList = document.querySelector('.user-info-list');
+            const commentsContainer = document.querySelector('.comments-container');
+
+            userInfoList.style.display = 'none';
+            commentsContainer.style.display = 'none';
+        }
 
         // checkCookie() 함수 추가
         function checkCookie() {
@@ -126,6 +154,7 @@
 
     function loadProfileInformation(){
         const profileContent = document.querySelector('.profile-content');
+        const profileContainer = document.querySelector('.profile-container'); // 프로필 컨테이너 선택
 
         // 프로필 정보 불러오기
         fetch('/api/mypage/profile', {
@@ -139,15 +168,18 @@
             .then(data => {
                 // 프로필 정보를 HTML에 추가
                 profileContent.innerHTML = `
-            <p>닉네임: ${data.nickname}</p>
-            <p>아이디: ${data.username}</p>
-            <p>자기소개: ${data.introduction}</p>
-            <!-- 추가 필요한 프로필 정보 -->
-        `;
+                    <p><strong>닉네임 </strong> ${data.nickname}</p>
+                    <p><strong>아이디 </strong> ${data.username}</p>
+                    <p><strong>자기소개 </strong> ${data.introduction}</p>
+                <!-- 추가 필요한 프로필 정보 -->
+            `;
+
+                // 프로필 정보를 표시하는 코드 추가
+                profileContainer.style.display = 'block';
             })
             .catch(error => console.error('Error:', error));
-
     }
+
 
     const userPerPage = 15;
     const userInfoList = document.querySelector('.user-info-list');
@@ -249,15 +281,14 @@
                 contents: post.contents
             };
             postDiv.innerHTML = `
-                    <div class="post-info">
-                        <span class="info-item post-title">
-                                <a href="/api/view/boarddetail?id=${post.id}">${post.title}</a>
-                        </span>
-                        <span class="info-item">${post.nickname}</span>
-                        <span class="info-item">${formattedDateTime}</span>
-                    </div>
+            <div class="post-info">
+                <span class="info-item post-title" style="font-weight: bold; width: 500px; display: inline-block;">
+                    <a href="/api/view/boarddetail?id=${post.id}" style="text-decoration: none; color: black;">${post.title}</a>
+                </span>
+                <span class="info-item" style="width: 200px; display: inline-block;">${formattedDateTime}</span>
+            </div>
+            `;
 
-        `;
             userInfoList.appendChild(postDiv);
         });
     }

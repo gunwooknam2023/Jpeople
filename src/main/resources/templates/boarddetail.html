@@ -29,6 +29,15 @@
 
 <!--게시글 내용-->
 <div class="content" style="position: relative; background-color: #FAFAFA">
+    <!-- 우측 상단에 톱니바퀴 아이콘 추가 -->
+    <div style="position: absolute; top: 10px; right: 10px; display: flex; align-items: center;">
+        <img src="/images/setting.png" alt="settings icon" style="width: 20px; height: 20px; cursor: pointer;" onclick="toggleButtons()">
+        <div id="editButtons" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); text-align: left;">
+            <button style="border: none; background-color: white; font-size: 14px; cursor: pointer; display: block; width: 100%;" onclick="editPost()">수정</button>
+            <button style="border: none; background-color: white; font-size: 14px; cursor: pointer; display: block; width: 100%;" onclick="deletePost()">삭제</button>
+        </div>
+    </div>
+
     <div class="title" style="margin-bottom: 20px">
         <span id="titles" style="font-weight: bolder; font-size: 1.8em" ></span>
     </div>
@@ -76,6 +85,23 @@
 
 <script>
 
+    function toggleButtons() {
+        var editButtons = document.getElementById('editButtons');
+        if (editButtons.style.display === 'none') {
+            editButtons.style.display = 'block';
+        } else {
+            editButtons.style.display = 'none';
+        }
+    }
+
+    function editPost() {
+        // 게시글 수정 코드 작성
+    }
+
+    function deletePost() {
+        // 게시글 삭제 코드 작성
+    }
+
     function createComments() {
         const commentInput = document.getElementById('commentInput');
         const commentText = commentInput.value.trim();
@@ -100,7 +126,6 @@
         xhr.onload = function () {
             if (xhr.status >= 200 && xhr.status < 400) {
                 var responseText = xhr.responseText;
-                alert(responseText);
 
                 // 댓글 작성 성공 시 화면 갱신 등 필요한 작업 수행
                 // 예: 댓글 목록 다시 불러오기 등
