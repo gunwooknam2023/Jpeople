@@ -149,3 +149,30 @@
     align-items: center;
     justify-content: center;
 }
+
+.pagination2 {
+    font-size: 1.4em; /* 원하는 폰트 크기로 조절 */
+    justify-content: center;
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pagination2 button.active {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+}
+
+.pagination2 button {
+    width: 1em;
+    height: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
