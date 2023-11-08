@@ -56,5 +56,10 @@ public class ViewController {
         return "signup";
     }
 
+    @GetMapping("/calculator")
+    public String calculator(){
+        return "calculator";
+    }
+
 
 }
