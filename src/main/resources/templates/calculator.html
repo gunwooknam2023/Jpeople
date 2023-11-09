@@ -28,6 +28,32 @@
   </div>
 </div>
 
+<div>
+  <h3>계산기</h3>
+</div>
+<div class="calculator">
+  <div class="display" id="display">0</div>
+  <div class="keypad">
+    <div class="key" id="clear">C</div>
+    <div class="key">1</div>
+    <div class="key">2</div>
+    <div class="key">3</div>
+    <div class="key">4</div>
+    <div class="key">5</div>
+    <div class="key">6</div>
+    <div class="key">7</div>
+    <div class="key">8</div>
+    <div class="key">9</div>
+    <div class="key">+</div>
+    <div class="key">0</div>
+    <div class="key">-</div>
+    <div class="key">*</div>
+    <div class="key">/</div>
+    <div class="key">=</div>
+  </div>
+  <div class="display" id="result">0</div>
+  <div class="history" id="history"></div>
+</div>
 
 
 
@@ -43,6 +69,26 @@
 
 <script>
 
+  document.addEventListener('DOMContentLoaded', function() {
+    var display = document.getElementById('display');
+    var history = document.getElementById('history');
+
+    var numberButtons = document.querySelectorAll('.keypad .key:not(.operator)');
+    var clearButton = document.getElementById('clear');
+
+    numberButtons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        if (display.textContent === '0') {
+          display.textContent = ''; // 결과창이 0일 경우 초기화
+        }
+        display.textContent += button.textContent;
+      });
+    });
+
+    clearButton.addEventListener('click', function() {
+      display.textContent = '0'; // 초기화 버튼 클릭 시 결과창 초기화
+    });
+  });
 
   document.addEventListener('DOMContentLoaded', function() {
     const navbarLeft = document.querySelector('.navbar-left');
