@@ -29,7 +29,7 @@
 </div>
 
 <div>
-  <h3>계산기</h3>
+  <h3 style="text-align: center; padding-top: 30px; padding-bottom: 10px">계산기</h3>
 </div>
 <div class="calculator">
   <div class="display" id="display">0</div>
@@ -70,23 +70,42 @@
 <script>
 
   document.addEventListener('DOMContentLoaded', function() {
-    var display = document.getElementById('display');
-    var history = document.getElementById('history');
+    const display = document.getElementById('display');
+    const resultDisplay = document.getElementById('result');
+    const historyDisplay = document.getElementById('history');
 
-    var numberButtons = document.querySelectorAll('.keypad .key:not(.operator)');
-    var clearButton = document.getElementById('clear');
+    document.querySelectorAll('.key').forEach(function(key) {
+      key.addEventListener('click', function() {
+        if (key.textContent === '=') {
+          const inputValue = display.textContent;
+          const calculatorRequestDto = {
+            calContents: inputValue
+          };
 
-    numberButtons.forEach(function(button) {
-      button.addEventListener('click', function() {
-        if (display.textContent === '0') {
-          display.textContent = ''; // 결과창이 0일 경우 초기화
+          fetch('/api/calculator', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(calculatorRequestDto)
+          })
+                  .then(response => response.json())
+                  .then(data => {
+                    resultDisplay.textContent = data;
+                    historyDisplay.innerHTML += `<div>${inputValue} = ${data}</div>`;
+                  })
+                  .catch(error => console.error('Error:', error));
+        } else if (key.textContent === 'C') {
+          display.textContent = '0';
+        } else {
+          if (display.textContent === '0' || resultDisplay.textContent !== '0') {
+            display.textContent = key.textContent;
+            resultDisplay.textContent = '0';
+          } else {
+            display.textContent += key.textContent;
+          }
         }
-        display.textContent += button.textContent;
       });
-    });
-
-    clearButton.addEventListener('click', function() {
-      display.textContent = '0'; // 초기화 버튼 클릭 시 결과창 초기화
     });
   });
 
