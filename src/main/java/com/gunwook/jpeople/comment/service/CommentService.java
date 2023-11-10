@@ -7,6 +7,7 @@ import com.gunwook.jpeople.post.dto.PostResponseDto;
 import com.gunwook.jpeople.post.entity.Post;
 import com.gunwook.jpeople.post.repository.PostRepository;
 import com.gunwook.jpeople.user.entity.User;
+import com.gunwook.jpeople.user.entity.UserRoleEnum;
 import com.gunwook.jpeople.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -51,11 +52,26 @@ public class CommentService {
                 () -> new IllegalArgumentException("존재하지 않는 댓글입니다.")
         );
 
-        if(!comment.getUser().getId().equals(user.getId())){
+        if(comment.getUser().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN)){
+            commentRepository.delete(comment);
+            return "댓글이 삭제되었습니다.";
+        } else{
             throw new IllegalArgumentException("댓글 작성자만 삭제가 가능합니다.");
         }
+    }
 
-        commentRepository.delete(comment);
-        return "댓글이 삭제되었습니다.";
+    public Boolean getCommentUser(User user, Long commentId) {
+        Boolean result;
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("댓글이 존재하지 않습니다.")
+        );
+
+        if(user.getId().equals(comment.getUser().getId()) || user.getRole().equals(UserRoleEnum.ADMIN)){
+            result = true;
+        } else{
+            result = false;
+        }
+
+        return result;
     }
 }
