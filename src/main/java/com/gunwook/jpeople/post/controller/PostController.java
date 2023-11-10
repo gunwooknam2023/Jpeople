@@ -107,4 +107,18 @@ public class PostController {
         PostResponseDto postResponseDto = postService.getPost(userDetails.getUser(), post_id);
         return ResponseEntity.ok(postResponseDto);
     }
+
+    /**
+     * 로그인 되어있는 유저와 게시글 유저의 id값 비교
+     * @param userDetails 로그인 한 유저
+     * @param post_id 게시글 아이디
+     * @return 일치, 불일치 여부
+     */
+    @GetMapping("/post/{post_id}/user")
+    ResponseEntity<Boolean> getPostUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                        @PathVariable Long post_id){
+        Boolean result = postService.getPostUser(userDetails.getUser(), post_id);
+        return ResponseEntity.ok(result);
+    }
+
 }
