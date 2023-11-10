@@ -65,7 +65,4 @@ public class ViewController {
     public String updateboard(){
         return "updateboard";
     }
-
-
-
 }

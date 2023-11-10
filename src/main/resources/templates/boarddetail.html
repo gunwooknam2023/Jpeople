@@ -52,7 +52,7 @@
     </div>
 
     <div style="display: flex; align-items: center; justify-content: flex-end; padding-right: 15px">
-            <img src="/images/check.png" alt="check icon" style="width: 20px; height: 20px; margin-right: 5px;">
+        <img src="/images/check.png" alt="check icon" style="width: 20px; height: 20px; margin-right: 5px;">
         <span id="viewCnts"></span>
         <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px; margin-left: 10px; margin-right: 5px; cursor: pointer;" onclick="likePost()">
         <span id="goodLikes"></span>
@@ -95,12 +95,52 @@
     }
 
     function editPost() {
-        // 게시글 수정 코드 작성
+        // 현재 게시글의 ID 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const post_id = urlParams.get('id');
+
+        // 현재 게시글의 제목과 내용 가져오기
+        const currentTitle = document.getElementById('titles').textContent;
+        const currentContent = document.getElementById('contentss').textContent;
+
+        // 수정 페이지로 이동
+        window.location.href = `/api/view/updateboard?id=${post_id}&title=${encodeURIComponent(currentTitle)}&contents=${encodeURIComponent(currentContent)}`;
     }
 
+
+
+
+
+
     function deletePost() {
-        // 게시글 삭제 코드 작성
+        // 게시글 삭제 전에 사용자에게 확인 메시지 표시
+        var confirmation = confirm('게시글을 삭제하시겠습니까?');
+
+        if (confirmation) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const post_id = urlParams.get('id');
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('DELETE', `/api/posts/${post_id}`, true);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // 게시글 삭제 성공 시, 메시지 표시 후 홈페이지로 리다이렉트
+                    alert('게시글이 삭제되었습니다.');
+                    window.location.href = '/api/view/board';
+                } else {
+                    // 게시글 삭제 실패 시, 적절한 에러 메시지 표시
+                    alert('게시글 삭제에 실패했습니다.');
+                }
+            };
+
+            xhr.send();
+        } else {
+            // 사용자가 확인을 누르지 않은 경우
+        }
     }
+
 
     function createComments() {
         const commentInput = document.getElementById('commentInput');
