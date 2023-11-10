@@ -31,7 +31,7 @@
 <div class="content" style="position: relative; background-color: #FAFAFA">
     <!-- 우측 상단에 톱니바퀴 아이콘 추가 -->
     <div style="position: absolute; top: 10px; right: 10px; display: flex; align-items: center;">
-        <img src="/images/setting.png" alt="settings icon" style="width: 20px; height: 20px; cursor: pointer;" onclick="toggleButtons()">
+        <img id="settingsIcon" src="/images/setting.png" alt="settings icon" style="width: 20px; height: 20px; cursor: pointer;" onclick="toggleButtons()">
         <div id="editButtons" style="display: none; position: absolute; top: 30px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); text-align: left;">
             <button style="border: none; background-color: white; font-size: 14px; cursor: pointer; display: block; width: 100%;" onclick="editPost()">수정</button>
             <button style="border: none; background-color: white; font-size: 14px; cursor: pointer; display: block; width: 100%;" onclick="deletePost()">삭제</button>
@@ -85,8 +85,43 @@
 
 <script>
 
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 현재 게시글의 ID 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const post_id = urlParams.get('id');
+
+        // GET 요청을 통해 서버에서 일치 여부 확인
+        fetch(`/api/post/${post_id}/user`)
+            .then(response => response.json())
+            .then(result => {
+                if (result === false) {
+                    // 결과가 false이면 아이콘과 버튼들을 숨김
+                    hideSettings();
+                } else {
+                    // 결과가 true이면 아이콘과 버튼들을 표시
+                    document.getElementById('settingsIcon').style.display = 'block';
+                    document.getElementById('editButtons').style.display = 'none'; // 처음에는 숨겨놓기
+                }
+            })
+            .catch(error => console.error('Error checking user:', error));
+    });
+
+    // 톱니바퀴 숨기기 함수
+    function hideSettings() {
+        var settingsIcon = document.getElementById('settingsIcon');
+        var editButtons = document.getElementById('editButtons');
+
+        settingsIcon.style.display = 'none';
+        editButtons.style.display = 'none';
+    }
+
+    // 톱니바퀴 토글 함수
     function toggleButtons() {
         var editButtons = document.getElementById('editButtons');
+
+        // 톱니바퀴가 표시되어 있을 때만 토글 동작
         if (editButtons.style.display === 'none') {
             editButtons.style.display = 'block';
         } else {

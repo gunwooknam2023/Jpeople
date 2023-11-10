@@ -73,13 +73,12 @@ public class PostService {
                 () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
         );
 
-        // 작성자 일치 여부
-        if(!post.getUser().getId().equals(user.getId())){
+        if(post.getUser().getId().equals(user.getId()) || user.getRole().equals(UserRoleEnum.ADMIN)){
+            postRepository.delete(post);
+            return "게시글이 삭제되었습니다.";
+        } else{
             throw new IllegalArgumentException("게시글 작성자만 삭제가 가능합니다.");
         }
-
-        postRepository.delete(post);
-        return "게시글이 삭제되었습니다.";
     }
 
     public List<PostResponseDto> getPosts() {
@@ -134,5 +133,20 @@ public class PostService {
         post.viewCnt();
         PostResponseDto postResponseDto = new PostResponseDto(post);
         return postResponseDto;
+    }
+
+    public Boolean getPostUser(User user, Long postId) {
+        Boolean result;
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("게시글이 존재하지 않습니다.")
+        );
+
+        if(user.getId().equals(post.getUser().getId()) || user.getRole().equals(UserRoleEnum.ADMIN)){
+            result = true;
+        } else{
+            result = false;
+        }
+
+        return result;
     }
 }
