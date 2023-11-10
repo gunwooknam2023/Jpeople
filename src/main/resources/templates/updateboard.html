@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 수정</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/6819/6819196.png">
+    <link rel="stylesheet" href="/css/createboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div class="navbar">
+    <div class="navbar-left">
+        <img src="https://cdn-icons-png.flaticon.com/512/6819/6819196.png" alt="icon">
+        J PEOPLE
+    </div>
+    <div class="navbar-right">
+        <a href="/api/view/login" class="login-button">로그인</a>
+        <a href="/" class="logout-button" onclick="logout()" style="display:none;" >로그아웃</a>
+        <a href="/api/view/notification">공지사항</a>
+        <a href="/api/view/board">자유게시판</a>
+        <a href="/api/view/schedule">일정관리</a>
+        <a href="/api/view/mypage">마이페이지</a>
+    </div>
+</div>
+
+<input type="hidden" id="post_id" value="">
+
+<div class="form-container">
+    <div class="mb-3">
+        <label for="titleInput" class="form-label"></label>
+        <input type="email" class="form-control form-control-custom" id="titleInput" placeholder="제목">
+    </div>
+
+    <div class="mb-3">
+        <label for="contentsInput" class="form-label"></label>
+        <textarea class="form-control textarea-custom" id="contentsInput" placeholder="내용" rows="3"></textarea>
+    </div>
+</div>
+
+<div class="button-container">
+    <button type="button" class="btn btn-secondary" onclick="postCancel()">취소</button>
+    <button type="button" class="btn btn-success" onclick="updateBoard()">수정</button>
+</div>
+
+<!-- 페이지 내용 (중앙 부분) -->
+<!-- 여기에 내용 추가 -->
+
+<!-- 하단바 -->
+<div class="footer">
+    대표: 남건욱
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 현재 URL에서 파라미터 읽어오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+        const title = urlParams.get('title');
+        const contents = urlParams.get('contents');
+
+        // 폼에 값 자동으로 설정
+        document.getElementById('titleInput').value = title;
+        document.getElementById('contentsInput').value = contents;
+
+
+        // post_id를 저장
+        const postIdElement = document.getElementById('post_id');
+        if (postIdElement) {
+            postIdElement.value = postId;
+        } else {
+            console.error("Element with id 'post_id' not found.");
+        }
+    });
+
+    function updateBoard() {
+        // 현재 입력된 값 가져오기
+        const postId = document.getElementById('post_id').value;
+        const updatedTitle = document.getElementById('titleInput').value;
+        const updatedContents = document.getElementById('contentsInput').value;
+
+        // 수정된 정보를 서버로 전송
+        var xhr = new XMLHttpRequest();
+        xhr.open('PUT', `/api/posts/${postId}`, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // 수정 성공 시, 게시판으로 리다이렉트
+                window.location.href = `/api/view/boarddetail?id=${postId}`;
+            } else {
+                // 수정 실패 시, 적절한 에러 처리
+                alert('게시글의 형식이 올바르지 않습니다.');
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
+        // 수정된 정보를 JSON 형식으로 전송
+        xhr.send(JSON.stringify({ title: updatedTitle, contents: updatedContents }));
+    }
+
+    function postCancel() {
+        const postId = document.getElementById('post_id').value;
+        window.location.href = `/api/view/boarddetail?id=${postId}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbarLeft = document.querySelector('.navbar-left');
+        const loginButton = document.querySelector('.login-button');
+        const logoutButton = document.querySelector('.logout-button');
+
+        // checkCookie() 함수 추가
+        function checkCookie() {
+            var token = Cookies.get('Authorization');
+
+            if (token) {
+                // 토큰이 있을 때, 로그아웃 버튼을 보여줍니다.
+                loginButton.style.display = 'none';
+                logoutButton.style.display = 'block';
+            } else {
+                // 토큰이 없을 때, 로그인 버튼을 보여줍니다.
+                loginButton.style.display = 'block';
+                logoutButton.style.display = 'none';
+            }
+        }
+
+        checkCookie();  // 페이지 로드 시 호출
+
+        navbarLeft.addEventListener('mouseover', function() {
+            navbarLeft.style.color = '#FF5733'; // 원하는 색상으로 변경
+        });
+
+        navbarLeft.addEventListener('mouseout', function() {
+            navbarLeft.style.color = ''; // 마우스를 떼면 원래 색상으로 돌아감
+        });
+
+        navbarLeft.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    });
+
+    function logout() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', '/api/logout', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                // 로그아웃 성공
+                window.location.href = '/'; // 로그아웃 후 홈페이지로 리다이렉트
+            } else {
+                // 로그아웃 실패
+                alert('로그아웃 실패. 다시 시도하세요.');
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Network Error');
+        };
+        xhr.send();
+    }
+</script>
+
+</body>
+</html>
