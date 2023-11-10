@@ -55,4 +55,18 @@ public class CommentController {
         String result = commentService.deleteComment(userDetails.getUser(), comment_id);
         return ResponseEntity.ok(result);
     }
+
+    /**
+     * 로그인 되어있는 유저와 댓글 유저의 id값 비교
+     * @param userDetails 로그인 유저
+     * @param comment_id 댓글 아이디
+     * @return 일치, 불일치 여부
+     */
+    @GetMapping("/comment/{comment_id}/user")
+    ResponseEntity<Boolean> getCommentUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                           @PathVariable Long comment_id){
+        Boolean result = commentService.getCommentUser(userDetails.getUser(), comment_id);
+        return ResponseEntity.ok(result);
+    }
+
 }
