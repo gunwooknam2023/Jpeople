@@ -61,5 +61,11 @@ public class ViewController {
         return "calculator";
     }
 
+    @GetMapping("/updateboard")
+    public String updateboard(){
+        return "updateboard";
+    }
+
+
 
 }
