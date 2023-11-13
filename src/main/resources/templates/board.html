@@ -225,6 +225,8 @@
 
             const viewCnt = post.viewCnt;
             const goodLike = post.goodLike;
+            const commentCount = post.commentResponseDtoList ? post.commentResponseDtoList.length : 0; // 댓글 개수
+
 
             postDiv.innerHTML = `
                         <div class="post-info" style="display: flex; align-items: center;">
@@ -236,6 +238,7 @@
                             </span>
                             <span class="info-item post-title">
                                 <a href="/api/view/boarddetail?id=${post.id}">${truncatedTitle}</a>
+                                ${commentCount > 0 ? `[<strong>${commentCount}</strong>]` : ''} <!-- 수정된 부분: 댓글 수가 0보다 큰 경우에만 표시 -->
                             </span>
                             <span class="info-item post-nickname">${post.nickname}</span>
                             <span class="info-item post-time">${timeAgoString}</span>
