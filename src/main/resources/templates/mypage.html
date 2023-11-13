@@ -61,7 +61,7 @@
     </div>
 </div>
 <!-- 페이지 네비게이션 -->
-<div class="pagination" style="justify-content: center; margin-top: 20px">
+<div class="pagination" style="margin-top: 20px">
     <!-- 페이지 번호 버튼들이 여기에 생성될 것입니다. -->
 </div>
 
@@ -72,9 +72,7 @@
         </div>
     </div>
 </div>
-<div class="pagination2" style="justify-content: center; margin-top: 20px">
-    <!-- 페이지 번호 버튼들이 여기에 생성될 것입니다. -->
-</div>
+
 
 <!-- 페이지 내용 (중앙 부분) -->
 <!-- 여기에 내용 추가 -->
@@ -87,93 +85,147 @@
 <script>
 
 
+    // 페이지네이션과 관련된 변수
     const userPerPage = 15;
     const userInfoList = document.querySelector('.user-info-list');
     const paginationContainer = document.querySelector('.pagination');
-    const paginationContainer2 = document.querySelector('.pagination2'); // 추가: pagination2 컨테이너 선택
+    const profileContainer = document.querySelector('.profile-container');
 
     let currentPage = 1;
-    let currentPage2 = 1;
-    let posts = [];
-    let comments = []; // 추가: 댓글 목록을 저장할 배열
+    let totalItems = 0;
+    let items = [];
+
 
     const navbarLeft = document.querySelector('.navbar-left');
     const loginButton = document.querySelector('.login-button');
     const logoutButton = document.querySelector('.logout-button');
-    const profileButton = document.querySelector('.profile') // 프로필 버튼 선택
-    const postsButton = document.querySelector('.posts'); // 작성한 게시글 버튼 선택
-    const commentsButton = document.querySelector('.comments'); // 작성한 댓글 버튼 선택
 
-    profileButton.addEventListener('click', function() {
-        currentPage = 1; // 프로필 버튼 클릭 시 페이지 번호 초기화
-        currentPage2 = 1; // 프로필 버튼 클릭 시 페이지 번호 초기화
+    // 페이지네이션 버튼 클릭 이벤트
+    paginationContainer.addEventListener('click', event => {
+        if (event.target.classList.contains('page-button')) {
+            currentPage = parseInt(event.target.dataset.page);
+
+            // commentsButton이 활성화된 경우와 postsButton이 활성화된 경우를 나눠서 처리
+            if (commentsButton.classList.contains('active')) {
+                renderCommentsForPage(currentPage);
+            } else if (postsButton.classList.contains('active')) {
+                renderPostsForPage(currentPage);
+            }
+
+            // 새로운 페이지로 이동할 때 모든 페이지 버튼에서 active 클래스 제거
+            document.querySelectorAll('.page-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // 현재 페이지에만 active 클래스 추가
+            event.target.classList.add('active');
+        }
+    });
+
+
+
+
+    // 프로필 버튼 클릭 이벤트
+    const profileButton = document.querySelector('.profile');
+    profileButton.addEventListener('click', function () {
+        currentPage = 1;
         loadProfileInformation();
         hidePostsAndComments();
-        hidePagination1(); // 프로필을 클릭했을 때 페이지네이션 1 표시
-        hidePagination2(); // 프로필을 클릭했을 때 페이지네이션 2 숨김
+        hidePagination();
+        // 프로필 버튼 클릭 시 다른 버튼의 활성 상태 제거
+        postsButton.classList.remove('active');
+        commentsButton.classList.remove('active');
+
+        // 작성한 게시글 버튼에 active 클래스 추가
+        profileButton.classList.add('active');
     });
 
-    postsButton.addEventListener('click', function() {
-        currentPage = 1; // 프로필 버튼 클릭 시 페이지 번호 초기화
-        currentPage2 = 1; // 프로필 버튼 클릭 시 페이지 번호 초기화
+    // 작성한 게시글 버튼 클릭 이벤트
+    const postsButton = document.querySelector('.posts');
+    postsButton.addEventListener('click', function () {
+        currentPage = 1;
         fetchAndRenderPosts();
         hideProfileAndComments();
-        showPagination1(); // 작성한 게시글을 클릭했을 때 페이지네이션 1 표시
-        hidePagination2(); // 작성한 게시글을 클릭했을 때 페이지네이션 2 숨김
+        showPagination();
+        // 프로필 버튼 클릭 시 다른 버튼의 활성 상태 제거
+        profileButton.classList.remove('active');
+        commentsButton.classList.remove('active');
+        // 작성한 게시글 버튼에 active 클래스 추가
+        postsButton.classList.add('active');
     });
 
-    commentsButton.addEventListener('click', function() {
-        currentPage = 1; // 프로필 버튼 클릭 시 페이지 번호 초기화
-        currentPage2 = 1; // 프로필 버튼 클릭 시 페이지 번호 초기화
+    // 작성한 댓글 버튼 클릭 이벤트
+    const commentsButton = document.querySelector('.comments');
+    commentsButton.addEventListener('click', function () {
+        currentPage = 1;
         fetchAndRenderComments();
         hideProfileAndPosts();
-        hidePagination1(); // 작성한 댓글을 클릭했을 때 페이지네이션 1 숨김
-        showPagination2(); // 작성한 댓글을 클릭했을 때 페이지네이션 2 표시
+        showPagination();
+        // 프로필 버튼 클릭 시 다른 버튼의 활성 상태 제거
+        profileButton.classList.remove('active');
+        postsButton.classList.remove('active');
+        // 작성한 댓글 버튼에 active 클래스 추가
+        commentsButton.classList.add('active');
     });
 
+    // 공통으로 사용되는 함수
     function hideProfileAndPosts() {
-        const profileContainer = document.querySelector('.profile-container');
-        const userInfoList = document.querySelector('.user-info-list');
-
         profileContainer.style.display = 'none';
         userInfoList.style.display = 'block';
+        hidePagination(); // 페이지네이션 숨김
     }
 
     function hideProfileAndComments() {
-        const profileContainer = document.querySelector('.profile-container');
-        const commentsContainer = document.querySelector('.comments-container');
-
         profileContainer.style.display = 'none';
-        commentsContainer.style.display = 'block';
+        userInfoList.style.display = 'block';
+        hidePagination(); // 페이지네이션 숨김
     }
 
     function hidePostsAndComments() {
-        const userInfoList = document.querySelector('.user-info-list');
-        const commentsContainer = document.querySelector('.comments-container');
-
         userInfoList.style.display = 'none';
-        commentsContainer.style.display = 'none';
+        hidePagination(); // 페이지네이션 숨김
     }
 
-    function hidePagination1() {
-        const paginationContainer1 = document.querySelector('.pagination');
-        paginationContainer1.style.display = 'none';
+    function showPagination() {
+        paginationContainer.style.display = 'block';
     }
 
-    function showPagination1() {
-        const paginationContainer1 = document.querySelector('.pagination');
-        paginationContainer1.style.display = 'block';
+    function hidePagination() {
+        paginationContainer.style.display = 'none';
     }
 
-    function hidePagination2() {
-        const paginationContainer2 = document.querySelector('.pagination2');
-        paginationContainer2.style.display = 'none';
+    // 작성한 게시글과 작성한 댓글을 위한 렌더링 함수
+    function renderItemsForPage(page) {
+        const startIndex = (page - 1) * userPerPage;
+        const endIndex = startIndex + userPerPage;
+        const itemsToShow = items.slice(startIndex, endIndex);
+
+        userInfoList.innerHTML = '';
+
+        itemsToShow.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('user-info');
+
+            const dateParts = item.createdAt.split('T');
+            const date = dateParts[0];
+            const time = dateParts[1].split('.')[0];
+
+            const formattedDateTime = `${date} ${time}`;
+
+            itemDiv.innerHTML = `
+                <div class="item-info">
+                    <span class="info-item item-text" style="font-weight: bold; width: 500px; display: inline-block;">
+                        ${item.contents}
+                    </span>
+                    <span class="info-item" style="width: 200px; display: inline-block;">${formattedDateTime}</span>
+                </div>
+            `;
+
+            userInfoList.appendChild(itemDiv);
+        });
     }
 
-    function showPagination2() {
-        const paginationContainer2 = document.querySelector('.pagination2');
-        paginationContainer2.style.display = 'block';
-    }
+
 
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -231,33 +283,14 @@
             })
             .then(responseComments => {
                 comments = responseComments;
-                totalComments = comments.length;
-                renderPagination2(); // 새로운 pagination2를 위한 함수 호출
+                totalItems = comments.length;  // totalItems를 comments.length로 설정
+                renderPagination();  // renderPagination을 호출하여 페이지 번호를 업데이트
                 userInfoList.innerHTML = '';
-                renderCommentsForPage(currentPage2);
-            });
+                renderCommentsForPage(currentPage);
+            })
+            .catch(error => console.error('Error fetching comments:', error));
     }
 
-    function renderPagination2() {
-        let totalPages;
-
-        totalPages = Math.ceil(comments.length / userPerPage);
-        const paginationContainer2 = document.querySelector('.pagination2'); // 새로운 pagination2 컨테이너 선택
-        paginationContainer2.innerHTML = '';
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement('button');
-            pageButton.classList.add('page-button');
-
-            if (i === currentPage2) {
-                pageButton.classList.add('active'); // 현재 페이지일 경우 'active' 클래스 추가
-            }
-
-            pageButton.textContent = i;
-            pageButton.dataset.page = i;
-            paginationContainer2.appendChild(pageButton);
-        }
-    }
 
     function renderCommentsForPage(page) {
         const startIndex = (page - 1) * userPerPage;
@@ -287,6 +320,27 @@
 
             userInfoList.appendChild(commentDiv);
         });
+    }  // 공통으로 사용되는 페이징 함수
+    function fetchAndRenderItems(apiEndpoint, renderFunction) {
+        fetch(apiEndpoint, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch items');
+                }
+                return response.json();
+            })
+            .then(responseItems => {
+                items = responseItems;
+                totalItems = items.length;
+                renderPagination();
+                userInfoList.innerHTML = '';
+                renderFunction(currentPage);
+            });
     }
 
     function loadProfileInformation(){
@@ -319,35 +373,6 @@
 
 
 
-    paginationContainer.addEventListener('click', event => {
-        if (event.target.classList.contains('page-button')) {
-            currentPage = parseInt(event.target.dataset.page);
-
-            const buttons = paginationContainer.querySelectorAll('.page-button');
-
-            buttons.forEach(button => button.classList.remove('active'));
-
-            event.target.classList.add('active');
-
-            renderPostsForPage(currentPage);
-
-        }
-    });
-
-    paginationContainer2.addEventListener('click', event => {
-        if (event.target.classList.contains('page-button')) {
-            currentPage2 = parseInt(event.target.dataset.page);
-
-            const buttons = paginationContainer2.querySelectorAll('.page-button');
-
-            buttons.forEach(button => button.classList.remove('active'));
-
-            event.target.classList.add('active');
-
-            renderCommentsForPage(currentPage2);
-        }
-    });
-
     // 작성한 게시물 조회 API와 연결
     function fetchAndRenderPosts() {
         const profileContainer = document.querySelector('.profile-container');
@@ -371,19 +396,18 @@
             })
             .then(responsePosts => {
                 posts = responsePosts;
-                totalPosts = posts.length;
-                renderPagination();
+                totalItems = posts.length;  // totalItems를 posts.length로 설정
+                renderPagination();  // renderPagination을 호출하여 페이지 번호를 업데이트
                 userInfoList.innerHTML = '';
                 renderPostsForPage(currentPage);
             })
-        // .catch(error => console.error('Error fetching posts:', error));
+            .catch(error => console.error('Error fetching posts:', error));
     }
 
+
     function renderPagination() {
-        let totalPages;
-
-        totalPages = Math.ceil(posts.length / userPerPage);
-
+        let totalPages = Math.ceil(totalItems / userPerPage);
+        const paginationContainer = document.querySelector('.pagination'); // 수정: 클래스 이름 수정
         paginationContainer.innerHTML = '';
 
         for (let i = 1; i <= totalPages; i++) {
@@ -391,7 +415,7 @@
             pageButton.classList.add('page-button');
 
             if (i === currentPage) {
-                pageButton.classList.add('active'); // 현재 페이지일 경우 'active' 클래스 추가
+                pageButton.classList.add('active');
             }
 
             pageButton.textContent = i;
@@ -399,6 +423,7 @@
             paginationContainer.appendChild(pageButton);
         }
     }
+
 
     function renderPostsForPage(page) {
         const startIndex = (page - 1) * userPerPage;
