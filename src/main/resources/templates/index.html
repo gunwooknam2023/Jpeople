@@ -209,6 +209,7 @@
                     const postTitle = document.createElement('span');
                     postTitle.classList.add('info-item', 'post-title', 'font-weight-bold');
                     const titleLink = document.createElement('a');
+                    const commentCount = post.commentResponseDtoList ? post.commentResponseDtoList.length : 0; // 댓글 개수
 
                     if(token) {
                         titleLink.href = '/api/view/boarddetail?id=' + post.id;
@@ -219,7 +220,7 @@
                         });
                     }
                     const truncatedTitle = post.title.length > 8 ? post.title.substring(0, 8) + '...' : post.title;
-                    titleLink.textContent = truncatedTitle;
+                    titleLink.innerHTML = `${truncatedTitle} ${commentCount > 0 ? `[<strong>${commentCount}</strong>]` : ''}`;
                     postTitle.appendChild(titleLink);
 
 
@@ -256,6 +257,8 @@
                     const postTitle = document.createElement('span');
                     postTitle.classList.add('info-item', 'post-title', 'font-weight-bold');
                     const titleLink = document.createElement('a');
+                    const commentCount = post.commentResponseDtoList ? post.commentResponseDtoList.length : 0; // 댓글 개수
+
                     if(token) {
                         titleLink.href = '/api/view/boarddetail?id=' + post.id;
                     } else{
@@ -265,8 +268,9 @@
                         });
                     }
                     const truncatedTitle = post.title.length > 8 ? post.title.substring(0, 8) + '...' : post.title;
-                    titleLink.textContent = truncatedTitle;
+                    titleLink.innerHTML = `${truncatedTitle} ${commentCount > 0 ? `[<strong>${commentCount}</strong>]` : ''}`;
                     postTitle.appendChild(titleLink);
+
 
                     const nickname = document.createElement('span');
                     nickname.classList.add('info-item', 'post-nickname');
