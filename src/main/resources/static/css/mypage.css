@@ -124,10 +124,11 @@
 }
 
 .pagination {
-    font-size: 1.4em; /* 원하는 폰트 크기로 조절 */
-    justify-content: center;
+    font-size: 1.4em;
+    display: flex; /* 가로로 나열하도록 설정 */
+    justify-content: center; /* 가로 중앙 정렬 */
     position: fixed;
-    bottom: 120px;
+    bottom: 120px; /* 원하는 위치로 조절 */
     left: 50%;
     transform: translateX(-50%);
     background-color: #fff;
@@ -136,43 +137,25 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-.pagination button.active {
-    background-color: #007bff;
-    color: #fff;
-    border: 1px solid #007bff;
-}
-
-.pagination button {
-    width: 1em;
-    height: 1em;
-    display: flex;
+.pagination .page-button {
+    width: 25px;
+    height: 25px;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-}
-
-.pagination2 {
-    font-size: 1.4em; /* 원하는 폰트 크기로 조절 */
-    justify-content: center;
-    position: fixed;
-    bottom: 120px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #fff;
-    padding: 5px 10px;
+    margin: 0 2px;
+    cursor: pointer;
+    border: 1px solid #007bff;
     border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
-.pagination2 button.active {
+.pagination .page-button.active {
     background-color: #007bff;
     color: #fff;
-    border: 1px solid #007bff;
 }
 
-.pagination2 button {
-    width: 1em;
-    height: 1em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.pagination .page-button:hover {
+    background-color: #007bff;
+    color: #fff;
 }
+
