@@ -1,5 +1,8 @@
 package com.gunwook.jpeople.goodlike.service;
 
+import com.gunwook.jpeople.alarm.entity.Alarm;
+import com.gunwook.jpeople.alarm.repository.AlarmRepository;
+import com.gunwook.jpeople.alarm.service.AlarmService;
 import com.gunwook.jpeople.comment.dto.CommentRequestDto;
 import com.gunwook.jpeople.comment.entity.Comment;
 import com.gunwook.jpeople.comment.repository.CommentRepository;
@@ -18,6 +21,8 @@ public class GoodLikeService {
     private final GoodLikeRepository goodLikeRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final AlarmRepository alarmRepository;
+    private final AlarmService alarmService;
 
     @Transactional
     public String goodLikePost(User user, Long postId) {
@@ -33,6 +38,20 @@ public class GoodLikeService {
             GoodLike goodLike = new GoodLike(user, post);
             goodLikeRepository.save(goodLike);
             post.likePost();
+
+            // 게시글에 좋아요 남겼을 시 알림 생성
+            if(!user.getId().equals(post.getUser().getId())) {
+                Alarm alarm = new Alarm();
+                alarm.setContents("♥게시글 좋아요 알림♥<br>" + user.getNickname() + "님이 회원님의 <" + post.getTitle() + "> 게시글에 좋아요를 눌렀습니다.");
+                alarm.setAddress("/api/view/boarddetail?id=" + post.getId());
+                alarm.setRead(false);
+                alarm.setUser(post.getUser());
+
+                alarmRepository.save(alarm);
+                alarmService.sendAlarmToUser(post.getUser().getId(), alarm);
+            }
+
+
             return "게시글에 좋아요를 누르셨습니다.";
         } else{
             GoodLike goodLike = goodLikeRepository.findByUserIdAndPostId(user.getId(), postId).orElseThrow(
@@ -58,6 +77,19 @@ public class GoodLikeService {
             GoodLike goodLike = new GoodLike(user, comment);
             goodLikeRepository.save(goodLike);
             comment.likeComment();
+
+            // 댓글에 좋아요 남겼을 시 알림 생성
+            if(!user.getId().equals(comment.getUser().getId())) {
+                Alarm alarm = new Alarm();
+                alarm.setContents("♥댓글 좋아요 알림♥<br>" + user.getNickname() + "님이 회원님이 작성한 <" + comment.getPost().getTitle() + "> 게시글의 댓글에 좋아요를 눌렀습니다.");
+                alarm.setAddress("/api/view/boarddetail?id=" + comment.getPost().getId());
+                alarm.setRead(false);
+                alarm.setUser(comment.getUser());
+
+                alarmRepository.save(alarm);
+                alarmService.sendAlarmToUser(comment.getUser().getId(), alarm);
+            }
+
             return "댓글에 좋아요를 누르셨습니다.";
         } else {
             GoodLike goodLike = goodLikeRepository.findByUserIdAndCommentId(user.getId(), commentId).orElseThrow(

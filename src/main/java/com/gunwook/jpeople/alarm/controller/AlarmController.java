@@ -51,7 +51,7 @@ public class AlarmController {
      * @param alarmId 읽음 처리할 알림 번호
      * @return 처리 결과
      */
-    @PostMapping("/alarm/check/{alarmId}")
+    @PostMapping("/alarm/read/{alarmId}")
     public ResponseEntity<String> checkUpdate(@PathVariable Long alarmId){
         String result = alarmService.checkUpdate(alarmId);
         return ResponseEntity.ok(result);
@@ -62,7 +62,7 @@ public class AlarmController {
      * @param userDetails 로그인 된 유저 정보
      * @return 처리 결과
      */
-    @PostMapping("/alarm/allcheck")
+    @PostMapping("/alarm/allread")
     public ResponseEntity<String> checkAllUpdate(@AuthenticationPrincipal UserDetailsImpl userDetails){
         String result = alarmService.checkAllUpdate(userDetails.getUser());
         return ResponseEntity.ok(result);

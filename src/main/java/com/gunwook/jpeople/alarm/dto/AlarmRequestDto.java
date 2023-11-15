@@ -9,6 +9,6 @@ import lombok.Setter;
 public class AlarmRequestDto {
     private String contents;
     private String address;
-    private boolean check;
+    private boolean read;
     private Long user_id;
 }
