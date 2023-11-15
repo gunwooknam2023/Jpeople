@@ -75,7 +75,7 @@ public class AlarmService {
                 () -> new IllegalArgumentException("로그인 후 알림목록을 불러올 수 있습니다.")
         );
 
-        List<Alarm> alarms = alarmRepository.findByUser(user);
+        List<Alarm> alarms = alarmRepository.findByUserId(user.getId());
         List<AlarmResponseDto> alarmResponseDtos = new ArrayList<>();
 
         for(Alarm alarm : alarms){
@@ -92,7 +92,7 @@ public class AlarmService {
                 () -> new IllegalArgumentException("존재하지 않는 알림입니다.")
         );
 
-        alarm.updateCheck();
+        alarm.updateRead();
         alarmRepository.save(alarm);
 
         return "읽음 처리 되었습니다.";
@@ -100,10 +100,10 @@ public class AlarmService {
 
     @Transactional
     public String checkAllUpdate(User user) {
-        List<Alarm> alarms = alarmRepository.findByUserAndCheckFalse(user);
+        List<Alarm> alarms = alarmRepository.findByUserIdAndReadFalse(user.getId());
 
         for(Alarm alarm : alarms){
-            alarm.updateCheck();
+            alarm.updateRead();
             alarmRepository.save(alarm);
         }
 

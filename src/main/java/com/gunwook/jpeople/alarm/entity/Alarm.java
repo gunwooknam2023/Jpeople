@@ -24,8 +24,8 @@ public class Alarm extends TimeStamped {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "check", nullable = false)
-    private boolean check;
+    @Column(name = "is_read", nullable = false)
+    private boolean read;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,12 +34,28 @@ public class Alarm extends TimeStamped {
     public Alarm(AlarmRequestDto alarmRequestDto, User user){
         this.contents = alarmRequestDto.getContents();
         this.address = alarmRequestDto.getAddress();
-        this.check = alarmRequestDto.isCheck();
+        this.read = alarmRequestDto.isRead();
         this.user = user;
     }
 
-    public void updateCheck(){
-        this.check = true;
+    public void updateRead(){
+        this.read = true;
+    }
+
+    public void setContents(String contents) {
+        this.contents = contents;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
 }
