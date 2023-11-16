@@ -33,7 +33,9 @@
             <!-- 알림 리스트가 표시될 부분 -->
             <ul class="alarm-list">
                 <li>
-                    <h3 style="font-weight: bold; text-align: center;">알림</h3>
+                    <button style="width: 70px; height: 30px; float: right" onclick="markAllAsReadConfirmation()">전체읽음</button>
+                    <h3 style="font-weight: bold;">알림</h3>
+
                 </li>
                 <!-- 이하 알림 목록이 추가될 자리 -->
             </ul>
@@ -100,6 +102,7 @@
         });
     });
 
+    // 알림 버튼을 눌렀을때 데이터를 가져오며 누를시 링크로 이동, 읽음처리
     function toggleNotification() {
         const dropdown = document.getElementById('alarmDropdown');
         const alarmList = document.querySelector('.alarm-list');
@@ -108,23 +111,44 @@
             fetch('/api/alarm/list')
                 .then(response => response.json())
                 .then(data => {
-                    const reversedNotifications = data.reverse(); // 알림을 역순으로 변경합니다.
-                    const listItems = reversedNotifications.map(notification => {
+                    const reversedAlarm = data.reverse(); // 알림을 역순으로 변경합니다.
+                    const listItems = reversedAlarm.map(alarm => {
                         const listItem = document.createElement('li');
-                        listItem.setAttribute('data-address', notification.address); // 주소를 설정합니다.
+                        listItem.setAttribute('data-address', alarm.address); // 주소를 설정합니다.
 
                         // 알림 내용을 표시합니다.
-                        const notificationContent = document.createElement('span');
-                        notificationContent.innerHTML = notification.contents;
+                        const alarmContent = document.createElement('span');
+                        alarmContent.innerHTML = alarm.contents;
 
                         // read 상태에 따라 클래스 추가
-                        if (notification.read) {
+                        if (alarm.read) {
                             listItem.classList.add('read');
                         } else {
                             listItem.classList.add('unread');
                         }
 
-                        listItem.appendChild(notificationContent);
+                        listItem.appendChild(alarmContent);
+
+                        // 알림 클릭 시 POST 요청 보내기
+                        listItem.addEventListener('click', function(event) {
+                            if (alarm.read) return; // 이미 읽은 알림은 무시합니다.
+
+                            fetch('/api/alarm/read/' + alarm.id, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // 응답을 받아 처리할 내용 작성
+                                    console.log(data); // 응답 데이터를 콘솔에 출력하거나, 필요한 처리 수행
+                                    listItem.classList.remove('unread'); // 읽은 알림으로 표시하기 위해 클래스 변경
+                                    listItem.classList.add('read');
+                                })
+                                .catch(error => console.error('에러 발생:', error));
+                        });
+
                         return listItem;
                     });
 
@@ -140,7 +164,40 @@
         }
     }
 
+    // 알림 전체읽음 처리 버튼
+    function markAllAsReadConfirmation() {
+        const confirmRead = confirm('알림을 모두 읽음 처리하시겠습니까?');
 
+        if (confirmRead) {
+            markAllAsRead();
+        }
+    }
+
+    function markAllAsRead() {
+        fetch('/api/alarm/allread', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // 여기에 필요한 인증 토큰 또는 사용자 정보를 전달하는 코드 추가
+            // 예를 들어, 사용자 정보가 담긴 객체를 전달하려면:
+            // body: JSON.stringify({ userDetails: userDetails })
+        })
+            .then(response => {
+                if (response.ok) {
+                    // 처리 성공 시 추가 작업 수행
+                    // console.log('전체 읽음 처리 완료');
+                    alert('전체 읽음 처리가 완료되었습니다.')
+                    // 읽은 알림들을 UI에서 처리하는 코드를 추가할 수 있습니다.
+
+                } else {
+                    // 처리 실패 시 오류 처리
+                    // console.error('전체 읽음 처리 실패');
+                    alert('전체 읽음 처리에 실패했습니다.')
+                }
+            })
+            .catch(error => console.error('에러 발생:', error));
+    }
 
 
 
