@@ -33,7 +33,7 @@
             <!-- 알림 리스트가 표시될 부분 -->
             <ul class="alarm-list">
                 <li>
-                    <h3 style="font-weight: bold;">알림</h3>
+                    <h3 style="font-weight: bold; text-align: center;">알림</h3>
                 </li>
                 <!-- 이하 알림 목록이 추가될 자리 -->
             </ul>
@@ -115,7 +115,7 @@
 
                         // 알림 내용을 표시합니다.
                         const notificationContent = document.createElement('span');
-                        notificationContent.textContent = notification.contents;
+                        notificationContent.innerHTML = notification.contents;
 
                         // read 상태에 따라 클래스 추가
                         if (notification.read) {
