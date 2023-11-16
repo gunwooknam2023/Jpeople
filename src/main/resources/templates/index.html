@@ -29,6 +29,15 @@
                 <img src="/images/bell.png" alt="알림 아이콘" style="width: 30px; height: 30px; margin-right: 20px">
                 <span class="alarm-badge" style="display:none;">3</span>
             </a>
+            <div class="dropdown-content" id="alarmDropdown" style="display: none;">
+            <!-- 알림 리스트가 표시될 부분 -->
+            <ul class="alarm-list">
+                <li>
+                    <h3 style="font-weight: bold;">알림</h3>
+                </li>
+                <!-- 이하 알림 목록이 추가될 자리 -->
+            </ul>
+        </div>
         </div>
     </div>
 </div>
@@ -76,6 +85,67 @@
 </div>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const alarmList = document.querySelector('.alarm-list');
+
+        alarmList.addEventListener('click', function(event) {
+            const clickedItem = event.target.closest('li');
+            if (!clickedItem) return;
+
+            // 알림 리스트 클릭 시 해당 주소로 이동
+            const address = clickedItem.getAttribute('data-address');
+            if (address) {
+                window.location.href = address;
+            }
+        });
+    });
+
+    function toggleNotification() {
+        const dropdown = document.getElementById('alarmDropdown');
+        const alarmList = document.querySelector('.alarm-list');
+
+        if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+            fetch('/api/alarm/list')
+                .then(response => response.json())
+                .then(data => {
+                    const reversedNotifications = data.reverse(); // 알림을 역순으로 변경합니다.
+                    const listItems = reversedNotifications.map(notification => {
+                        const listItem = document.createElement('li');
+                        listItem.setAttribute('data-address', notification.address); // 주소를 설정합니다.
+
+                        // 알림 내용을 표시합니다.
+                        const notificationContent = document.createElement('span');
+                        notificationContent.textContent = notification.contents;
+
+                        // read 상태에 따라 클래스 추가
+                        if (notification.read) {
+                            listItem.classList.add('read');
+                        } else {
+                            listItem.classList.add('unread');
+                        }
+
+                        listItem.appendChild(notificationContent);
+                        return listItem;
+                    });
+
+                    listItems.forEach(item => {
+                        alarmList.appendChild(item);
+                    });
+                })
+                .catch(error => console.error('에러 발생:', error));
+
+            dropdown.style.display = 'block';
+        } else {
+            dropdown.style.display = 'none';
+        }
+    }
+
+
+
+
+
+
+
     // 페이지의 자유게시판, 공지사항 클릭시 로그인 요청
     // document.addEventListener('DOMContentLoaded', function() {
     //     const boardSection = document.querySelector('.board-section');
@@ -118,6 +188,7 @@
             e.preventDefault();
             handleLinkClick('/api/view/mypage');
         });
+
     });
 
 
