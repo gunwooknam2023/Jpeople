@@ -38,7 +38,7 @@ public class CommentService {
         // 댓글 남겼을 시 알림 생성
         if(!user.getId().equals(post.getUser().getId())) {
             Alarm alarm = new Alarm();
-            alarm.setContents("\uD83D\uDCAC댓글\uD83D\uDCAC<br>" + user.getNickname() + "님이 회원님의 <" + post.getTitle() + "> 게시글에 댓글을 남겼습니다.");
+            alarm.setContents("\uD83D\uDCAC댓글\uD83D\uDCAC<br>" + user.getNickname() + "님이 회원님의 &lt;" + post.getTitle() + "&gt; 게시글에 댓글을 남겼습니다.");
             alarm.setAddress("/api/view/boarddetail?id=" + post.getId());
             alarm.setRead(false);
             alarm.setUser(post.getUser());

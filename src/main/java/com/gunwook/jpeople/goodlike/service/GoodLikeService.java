@@ -42,7 +42,7 @@ public class GoodLikeService {
             // 게시글에 좋아요 남겼을 시 알림 생성
             if(!user.getId().equals(post.getUser().getId())) {
                 Alarm alarm = new Alarm();
-                alarm.setContents("\uD83D\uDC9D게시글 좋아요\uD83D\uDC9D<br>" + user.getNickname() + "님이 회원님의 <" + post.getTitle() + "> 게시글에 좋아요를 눌렀습니다.");
+                alarm.setContents("\uD83D\uDC9D게시글 좋아요\uD83D\uDC9D<br>" + user.getNickname() + "님이 회원님의 &lt;" + post.getTitle() + "&gt; 게시글에 좋아요를 눌렀습니다.");
                 alarm.setAddress("/api/view/boarddetail?id=" + post.getId());
                 alarm.setRead(false);
                 alarm.setUser(post.getUser());
@@ -81,7 +81,7 @@ public class GoodLikeService {
             // 댓글에 좋아요 남겼을 시 알림 생성
             if(!user.getId().equals(comment.getUser().getId())) {
                 Alarm alarm = new Alarm();
-                alarm.setContents("\uD83D\uDC9D댓글 좋아요\uD83D\uDC9D<br>" + user.getNickname() + "님이 <" + comment.getPost().getTitle() + "> 게시글에 작성된 회원님의 댓글에 좋아요를 눌렀습니다.");
+                alarm.setContents("\uD83D\uDC9D댓글 좋아요\uD83D\uDC9D<br>" + user.getNickname() + "님이 &lt;" + comment.getPost().getTitle() + "&gt; 게시글에 작성된 회원님의 댓글에 좋아요를 눌렀습니다.");
                 alarm.setAddress("/api/view/boarddetail?id=" + comment.getPost().getId());
                 alarm.setRead(false);
                 alarm.setUser(comment.getUser());
