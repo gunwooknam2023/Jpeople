@@ -65,4 +65,9 @@ public class ViewController {
     public String updateboard(){
         return "updateboard";
     }
+
+    @GetMapping("/chatgpt")
+    public String chatgpt(){
+        return "chatgpt";
+    }
 }
