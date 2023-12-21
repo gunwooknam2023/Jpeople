@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -36,6 +37,20 @@
 
 <div class="add" style="padding-top: 30px">
     <button type="button" class="btn btn-primary add">일정 추가하기</button>
+</div>
+
+<div class="container" style="padding-top: 50px; padding-left: 200px;">
+    <div class="row">
+        <div class="col-md-4">
+            <canvas id="allPercentChart" width="150" height="150"></canvas>
+        </div>
+        <div class="col-md-4">
+            <canvas id="monthChart" width="150" height="150"></canvas>
+        </div>
+        <div class="col-md-4">
+            <canvas id="todayChart" width="150" height="150"></canvas>
+        </div>
+    </div>
 </div>
 
 
@@ -140,6 +155,78 @@
 </div>
 
 <script>
+
+    function getScheduleManagerData() {
+        $.ajax({
+            url: '/api/scheduleManager',
+            type: 'GET',
+            success: function(response) {
+                console.log(response); // 받아온 데이터를 콘솔에 출력
+
+                var allPercent = response.allPercent; // 전체 달성도 데이터
+                var monthPercent = response.monthPercent; // 월별 달성도 데이터
+                var todayPercent = response.todayPercent; // 오늘 달성도 데이터
+
+                // allPercent 도넛 그래프
+                createDonutChart('allPercentChart', '총 달성도', allPercent);
+
+                // month 도넛 그래프
+                createDonutChart('monthChart', '이번달 달성도', monthPercent);
+
+                // today 도넛 그래프
+                createDonutChart('todayChart', '오늘의 달성도', todayPercent);
+            },
+            error: function() {
+                alert('달성도를 불러오는 중 오류가 발생했습니다.');
+            }
+        });
+    }
+
+
+    function createDonutChart(elementId, label, data) {
+        var canvas = document.getElementById(elementId);
+
+        var ctx = canvas.getContext('2d');
+
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [label],
+                datasets: [{
+                    label: label,
+                    data: [data],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: label
+                    }
+                },
+                responsive: false // 반응형 비활성화
+            }
+        });
+    }
+
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        getScheduleManagerData();
+    });
+
+
     document.querySelector('#scheduleManagementModal .btn-primary').addEventListener('click', function() {
         // 새로운 텍스트 입력 필드를 생성합니다.
         var inputElement = document.createElement('input');
