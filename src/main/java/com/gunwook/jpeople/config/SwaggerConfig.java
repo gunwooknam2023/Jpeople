@@ -26,6 +26,4 @@ public class SwaggerConfig {
                         .version("v2.1.0")
                         .license(new License().name("Apache 2.0").url("http://springdoc.org")));
     }
-
-
 }

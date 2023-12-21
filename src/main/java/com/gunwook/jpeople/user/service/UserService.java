@@ -3,6 +3,10 @@ package com.gunwook.jpeople.user.service;
 
 import com.gunwook.jpeople.redis.RefreshToken;
 import com.gunwook.jpeople.redis.RefreshTokenRepository;
+import com.gunwook.jpeople.schedulePost.dto.ScheduleManagerResponseDto;
+import com.gunwook.jpeople.schedulePost.dto.SchedulePostResponseDto;
+import com.gunwook.jpeople.schedulePost.entity.SchedulePost;
+import com.gunwook.jpeople.schedulePost.repository.SchedulePostRepository;
 import com.gunwook.jpeople.security.jwt.JwtUtil;
 import com.gunwook.jpeople.user.dto.SignUpRequestDto;
 import com.gunwook.jpeople.user.entity.User;
@@ -20,17 +24,59 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final SchedulePostRepository schedulePostRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
     @Value("${signup.admin.key}")
     private String ADMIN_TOKEN;
+
+    public ScheduleManagerResponseDto scheduleManager(User user) {
+        Double todayPercent = 0.0;
+        Double monthPercent = 0.0;
+        Double allPercent = 0.0;
+        int monthCnt = 0;
+        int todayCnt = 0;
+
+        LocalDate today = LocalDate.now();
+
+        List<SchedulePost> schedulePosts = schedulePostRepository.findByUserId(user.getId());
+
+        for(SchedulePost schedulePost : schedulePosts){
+            // 전체 퍼센트
+            allPercent += schedulePost.getPercent();
+
+            // 당일 퍼센트
+            if(schedulePost.getCreatedAt().toLocalDate().equals(today)){
+                todayPercent += schedulePost.getPercent();
+                todayCnt++;
+            }
+
+            // 이번달 퍼센트
+            if(schedulePost.getCreatedAt().getMonth() == today.getMonth()){
+                monthPercent += schedulePost.getPercent();
+                monthCnt++;
+            }
+        }
+
+        DecimalFormat df = new DecimalFormat("#.##"); // 소수점 두자리만 출력을 위해 값을 형식화
+        allPercent = Double.parseDouble(df.format(allPercent/schedulePosts.size()));
+        monthPercent = Double.parseDouble(df.format(monthPercent/(double)monthCnt));
+        todayPercent = Double.parseDouble(df.format(todayPercent/(double)todayCnt));
+
+        ScheduleManagerResponseDto scheduleManagerResponseDto = new ScheduleManagerResponseDto(todayPercent, monthPercent, allPercent);
+        return scheduleManagerResponseDto;
+    }
 
     public String signUp(SignUpRequestDto signUpRequestDto) {
         // 중복 체크
@@ -121,7 +167,6 @@ public class UserService {
         String accessToken = jwtUtil.createToken(username, role);
         jwtUtil.addJwtToCookie(accessToken, response);
     }
-
 
 
 
