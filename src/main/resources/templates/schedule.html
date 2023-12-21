@@ -43,12 +43,24 @@
     <div class="row">
         <div class="col-md-4">
             <canvas id="allPercentChart" width="150" height="150"></canvas>
+            <div style="padding-top: 10px; padding-left: 25px">
+            <p style="font-weight: bold">달성도 : n%</p>
+            <p style="font-weight: bold">미달성도 : n%</p>
+            </div>
         </div>
         <div class="col-md-4">
             <canvas id="monthChart" width="150" height="150"></canvas>
+            <div style="padding-top: 10px; padding-left: 25px">
+                <p style="font-weight: bold">달성도 : n%</p>
+                <p style="font-weight: bold">미달성도 : n%</p>
+            </div>
         </div>
         <div class="col-md-4">
             <canvas id="todayChart" width="150" height="150"></canvas>
+            <div style="padding-top: 10px; padding-left: 25px">
+                <p style="font-weight: bold">달성도 : n%</p>
+                <p style="font-weight: bold">미달성도 : n%</p>
+            </div>
         </div>
     </div>
 </div>
@@ -137,7 +149,7 @@
                 <!-- 이곳에 카드 정보가 들어갑니다. -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="location.reload();">닫기</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeModalAndReload()">닫기</button>
                 <button type="button" class="btn btn-primary">추가</button>
             </div>
         </div>
@@ -156,6 +168,12 @@
 
 <script>
 
+    function closeModalAndReload() {
+        location.reload();
+        getScheduleManagerData();
+    }
+
+
     function getScheduleManagerData() {
         $.ajax({
             url: '/api/scheduleManager',
@@ -163,18 +181,29 @@
             success: function(response) {
                 console.log(response); // 받아온 데이터를 콘솔에 출력
 
-                var allPercent = response.allPercent; // 전체 달성도 데이터
-                var monthPercent = response.monthPercent; // 월별 달성도 데이터
-                var todayPercent = response.todayPercent; // 오늘 달성도 데이터
+                var allPercent = response.allPercent.toFixed(2); // 전체 달성도 데이터 소수점 둘째 자리까지 처리
+                var monthPercent = response.monthPercent.toFixed(2); // 월별 달성도 데이터 소수점 둘째 자리까지 처리
+                var todayPercent = response.todayPercent.toFixed(2); // 오늘 달성도 데이터 소수점 둘째 자리까지 처리
+
 
                 // allPercent 도넛 그래프
-                createDonutChart('allPercentChart', '총 달성도', allPercent);
+                createDonutChart('allPercentChart', '총 달성도', allPercent, true);
 
                 // month 도넛 그래프
-                createDonutChart('monthChart', '이번달 달성도', monthPercent);
+                createDonutChart('monthChart', '이번달 달성도', monthPercent, true);
 
                 // today 도넛 그래프
-                createDonutChart('todayChart', '오늘의 달성도', todayPercent);
+                createDonutChart('todayChart', '오늘의 달성도', todayPercent, true);
+
+                // HTML에 데이터 삽입
+                document.querySelector('#allPercentChart + div p:nth-of-type(1)').innerText = `달성도 : ${allPercent}%`;
+                document.querySelector('#allPercentChart + div p:nth-of-type(2)').innerText = `미달성도 : ${(100 - allPercent).toFixed(2)}%`;
+
+                document.querySelector('#monthChart + div p:nth-of-type(1)').innerText = `달성도 : ${monthPercent}%`;
+                document.querySelector('#monthChart + div p:nth-of-type(2)').innerText = `미달성도 : ${(100 - monthPercent).toFixed(2)}%`;
+
+                document.querySelector('#todayChart + div p:nth-of-type(1)').innerText = `달성도 : ${todayPercent}%`;
+                document.querySelector('#todayChart + div p:nth-of-type(2)').innerText = `미달성도 : ${(100 - todayPercent).toFixed(2)}%`;
             },
             error: function() {
                 alert('달성도를 불러오는 중 오류가 발생했습니다.');
@@ -183,24 +212,33 @@
     }
 
 
-    function createDonutChart(elementId, label, data) {
-        var canvas = document.getElementById(elementId);
 
+    function createDonutChart(elementId, label, data, displayPercentage) {
+        var canvas = document.getElementById(elementId);
         var ctx = canvas.getContext('2d');
+
+        var percentAchieved = data; // 전달된 퍼센트 값
+        var percentNotAchieved = 100 - percentAchieved; // 미달성 퍼센트 계산
+
+        var backgroundColor = [
+            `rgba(0, 0, 255, ${percentAchieved / 100})`, // 파란색으로 표시할 부분
+            `rgba(255, 0, 0, ${percentNotAchieved / 100})` // 빨간색으로 표시할 부분
+        ];
+
+        var borderColor = [
+            'rgba(0, 0, 255, 1)',
+            'rgba(255, 0, 0, 1)'
+        ];
 
         var myChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: [label],
+                labels: ['달성', '미달성'],
                 datasets: [{
                     label: label,
-                    data: [data],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)'
-                    ],
+                    data: [percentAchieved, percentNotAchieved],
+                    backgroundColor: backgroundColor,
+                    borderColor: borderColor,
                     borderWidth: 1
                 }]
             },
@@ -213,12 +251,39 @@
                     title: {
                         display: true,
                         text: label
+                    },
+                    datalabels: {
+                        display: true,
+                        color: 'white',
+                        font: {
+                            size: '14'
+                        },
+                        formatter: function(context) {
+                            return context.dataset.data[context.dataIndex] + '%';
+                        }
+                    },
+                    annotation: {
+                        annotations: {
+                            labels: {
+                                font: {
+                                    size: 14
+                                },
+                                color: 'black',
+                                position: 'end',
+                                content: function(context) {
+                                    return `달성도: ${context.chart.data.datasets[0].data[0]}% 미달성도: ${context.chart.data.datasets[0].data[1]}%`;
+                                }
+                            }
+                        }
                     }
                 },
                 responsive: false // 반응형 비활성화
             }
+
         });
     }
+
+
 
 
 
