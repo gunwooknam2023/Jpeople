@@ -74,6 +74,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/cards/**").permitAll() // 회원가입, 로그인으로 시작하는 요청 모두 접근 허가
                         .requestMatchers(HttpMethod.GET,"/api/user/*/callback").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/login").permitAll()
+                        .requestMatchers("/swagger*/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
