@@ -1,6 +1,7 @@
 package com.gunwook.jpeople.user.controller;
 
 
+import com.gunwook.jpeople.schedulePost.dto.ScheduleManagerResponseDto;
 import com.gunwook.jpeople.security.UserDetailsImpl;
 import com.gunwook.jpeople.user.dto.SignUpRequestDto;
 import com.gunwook.jpeople.user.service.UserService;
@@ -18,6 +19,17 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+
+    /**
+     * 유저의 전체, 달, 일별 달성도 조회
+     * @param userDetails 로그인 정보
+     * @return 달성도 정보
+     */
+    @GetMapping("/scheduleManager")
+    ResponseEntity<ScheduleManagerResponseDto> scheduleManager(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        ScheduleManagerResponseDto scheduleManagerResponseDto = userService.scheduleManager(userDetails.getUser());
+        return ResponseEntity.ok(scheduleManagerResponseDto);
+    }
 
     /**
      * 회원가입
