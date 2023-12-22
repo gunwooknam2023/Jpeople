@@ -183,8 +183,21 @@
 
                 var allPercent = response.allPercent.toFixed(2); // 전체 달성도 데이터 소수점 둘째 자리까지 처리
                 var monthPercent = response.monthPercent.toFixed(2); // 월별 달성도 데이터 소수점 둘째 자리까지 처리
-                var todayPercent = response.todayPercent.toFixed(2); // 오늘 달성도 데이터 소수점 둘째 자리까지 처리
+                var todayPercent;
 
+                // todayPercent가 NaN이면 0으로 설정
+                if (isNaN(response.todayPercent)) {
+                    todayPercent = 0;
+                } else {
+                    todayPercent = parseFloat(response.todayPercent).toFixed(2); // 문자열을 숫자로 변환 후 소수점 둘째 자리까지 처리
+                }
+
+                // 만약 monthPercent NaN이면 0으로 설정
+                if (isNaN(response.monthPercent)) {
+                    monthPercent = 0;
+                } else {
+                    monthPercent = parseFloat(response.monthPercent).toFixed(2); // 문자열을 숫자로 변환 후 소수점 둘째 자리까지 처리
+                }
 
                 // allPercent 도넛 그래프
                 createDonutChart('allPercentChart', '총 달성도', allPercent, true);
