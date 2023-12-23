@@ -25,14 +25,14 @@
         <a href="/api/view/schedule">일정관리</a>
         <a href="/api/view/mypage">마이페이지</a>
         <div class="alarm-wrapper">
-            <a class="alarm-icon" onclick="toggleNotification()">
+            <a href="#" class="alarm-icon" onclick="toggleNotification()">
                 <img src="/images/bell.png" alt="알림 아이콘" style="width: 30px; height: 30px; margin-right: 20px">
                 <span class="alarm-badge" style="display:none;">3</span>
             </a>
             <div class="dropdown-content" id="alarmDropdown" style="display: none; overflow-y: auto; max-height: 800px; overflow-x: hidden;">
                 <div>
-                        <button style="width: 70px; height: 30px; float: right" onclick="markAllAsReadConfirmation()">전체읽음</button>
-                        <h3 style="font-weight: bold; text-align: center; padding-left: 50px">알림</h3>
+                    <button style="width: 70px; height: 30px; float: right" onclick="markAllAsReadConfirmation()">전체읽음</button>
+                    <h3 style="font-weight: bold; text-align: center; padding-left: 50px">알림</h3>
                 </div>
                 <ul class="alarm-list" id="alarmList">
                     <!-- 이하 알림 목록이 추가될 자리 -->
@@ -63,27 +63,39 @@
     </div>
 
     <div style="display: flex; flex-direction: row;">
-    <div class="calculator-section" style="background-color: #A9BCF5; margin-top: 20%; width: 130px; height: 180px; border-radius: 30px; border: 1px solid #D8D8D8;
+        <div class="calculator-section" style="background-color: #A9BCF5; margin-top: 20%; width: 130px; height: 180px; border-radius: 30px; border: 1px solid #D8D8D8;
             display: flex; justify-content: center; align-items: center">
-        <!--        background-color: red; padding-top: 200px; width: 300px; height: 300px" >-->
-        <div style="text-align: center">
-            <a href="/api/view/calculator" style="text-decoration: none; color: inherit;">
-                <h3 style="font-weight: bold">계산기</h3>
-                <img src="/images/calculator.png" alt="calculator Image" style="width: 80px; height: 80px;">
-            </a>
+            <!--        background-color: red; padding-top: 200px; width: 300px; height: 300px" >-->
+            <div style="text-align: center">
+                <a href="/api/view/calculator" style="text-decoration: none; color: inherit;">
+                    <h3 style="font-weight: bold">계산기</h3>
+                    <img src="/images/calculator.png" alt="calculator Image" style="width: 80px; height: 80px;">
+                </a>
+            </div>
         </div>
-    </div>
 
-    <div class="chatgpt-section" style="background-color: #A9BCF5; margin-top: 20%; width: 130px; height: 180px; border-radius: 30px; border: 1px solid #D8D8D8;
+        <div class="chatgpt-section" style="background-color: #A9BCF5; margin-top: 20%; width: 130px; height: 180px; border-radius: 30px; border: 1px solid #D8D8D8;
             display: flex; justify-content: center; align-items: center; margin-left: 20px">
-        <!--        background-color: red; padding-top: 200px; width: 300px; height: 300px" >-->
-        <div style="text-align: center">
-            <a href="/api/view/chatgpt" style="text-decoration: none; color: inherit;">
-                <h3 style="font-weight: bold">인공지능</h3>
-                <img src="/images/chatgpt.png" alt="chatgpt Image" style="width: 100px; height: 80px;">
-            </a>
+            <!--        background-color: red; padding-top: 200px; width: 300px; height: 300px" >-->
+            <div style="text-align: center">
+                <a href="/api/view/chatgpt" style="text-decoration: none; color: inherit;">
+                    <h3 style="font-weight: bold">인공지능</h3>
+                    <img src="/images/chatgpt.png" alt="chatgpt Image" style="width: 100px; height: 80px;">
+                </a>
+            </div>
         </div>
-    </div>
+
+        <div class="paintboard-section" style="background-color: #A9BCF5; margin-top: 20%; width: 130px; height: 180px; border-radius: 30px; border: 1px solid #D8D8D8;
+            display: flex; justify-content: center; align-items: center; margin-left: 20px">
+            <!--        background-color: red; padding-top: 200px; width: 300px; height: 300px" >-->
+            <div style="text-align: center">
+                <a href="/api/view/paintboard" style="text-decoration: none; color: inherit;">
+                    <h3 style="font-weight: bold">그림판</h3>
+                    <img src="/images/paint.png" alt="paintboard Image" style="width: 100px; height: 80px;">
+                </a>
+            </div>
+        </div>
+
     </div>
 
 </div>
@@ -129,6 +141,8 @@
             }
         });
     });
+
+
 
     // 알림 버튼을 눌렀을때 데이터를 가져오며 누를시 링크로 이동, 읽음처리
     function toggleNotification() {
