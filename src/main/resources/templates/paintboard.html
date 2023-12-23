@@ -35,7 +35,10 @@
     </div>
 </div>
 
+<button onclick="saveImage()">저장</button>
+
 <canvas id="drawing-board" width="1800" height="800"></canvas>
+
 
 <!-- 하단바 -->
 <div class="footer">
@@ -48,6 +51,10 @@
 
     const canvas = document.getElementById('drawing-board');
     const ctx = canvas.getContext('2d');
+
+    // 캔버스 배경색을 흰색으로 설정
+    ctx.fillStyle = '#ffffff'; // 흰색
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     let painting = false;
 
@@ -77,6 +84,20 @@
     canvas.addEventListener('mousedown', startPosition);
     canvas.addEventListener('mouseup', endPosition);
     canvas.addEventListener('mousemove', draw);
+
+    // 캔버스에서 그린 그림을 이미지로 저장하는 함수
+    function saveImage() {
+        const canvas = document.getElementById('drawing-board');
+
+        // 캔버스의 그림을 이미지로 가져옵니다.
+        const image = canvas.toDataURL('image/png'); // 형식은 PNG로 설정합니다.
+
+        // 이 이미지를 다운로드할 수 있는 링크를 생성합니다.
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = 'my_drawing.png'; // 저장될 이미지 파일의 이름을 설정합니다.
+        link.click();
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         const navbarLeft = document.querySelector('.navbar-left');
