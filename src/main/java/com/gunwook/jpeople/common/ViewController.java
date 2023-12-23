@@ -70,4 +70,8 @@ public class ViewController {
     public String chatgpt(){
         return "chatgpt";
     }
+    @GetMapping("/paintboard")
+    public String paintboard(){
+        return "paintboard";
+    }
 }

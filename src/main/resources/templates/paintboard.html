@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J PEOPLE</title>
+    <link rel="icon" href="/images/logo.png">
+    <link rel="stylesheet" href="/css/paintboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+    <style>
+        #drawing-board {
+            border: 1px solid #000;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<!-- 상단바 -->
+<div class="navbar">
+    <div class="navbar-left">
+        <img src="https://cdn-icons-png.flaticon.com/512/6819/6819196.png" alt="icon">
+        J PEOPLE
+    </div>
+    <div class="navbar-right">
+        <a href="/api/view/login" class="login-button">로그인</a>
+        <a href="/" class="logout-button" onclick="logout()" style="display:none;" >로그아웃</a>
+        <a href="/api/view/notification">공지사항</a>
+        <a href="/api/view/board">자유게시판</a>
+        <a href="/api/view/schedule">일정관리</a>
+        <a href="/api/view/mypage">마이페이지</a>
+    </div>
+</div>
+
+<canvas id="drawing-board" width="1800" height="800"></canvas>
+
+<!-- 하단바 -->
+<div class="footer">
+    대표: 남건욱
+</div>
+
+
+
+<script>
+
+    const canvas = document.getElementById('drawing-board');
+    const ctx = canvas.getContext('2d');
+
+    let painting = false;
+
+    function startPosition(e) {
+        painting = true;
+        draw(e);
+    }
+
+    function endPosition() {
+        painting = false;
+        ctx.beginPath();
+    }
+
+    function draw(e) {
+        if (!painting) return;
+
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+
+        ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    }
+
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', endPosition);
+    canvas.addEventListener('mousemove', draw);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const navbarLeft = document.querySelector('.navbar-left');
+        const loginButton = document.querySelector('.login-button');
+        const logoutButton = document.querySelector('.logout-button');
+
+        // checkCookie() 함수 추가
+        function checkCookie() {
+            var token = Cookies.get('Authorization');
+
+            if (token) {
+                // 토큰이 있을 때, 로그아웃 버튼을 보여줍니다.
+                loginButton.style.display = 'none';
+                logoutButton.style.display = 'block';
+            } else {
+                // 토큰이 없을 때, 로그인 버튼을 보여줍니다.
+                loginButton.style.display = 'block';
+                logoutButton.style.display = 'none';
+            }
+        }
+
+        checkCookie();  // 페이지 로드 시 호출
+
+        navbarLeft.addEventListener('mouseover', function() {
+            navbarLeft.style.color = '#FF5733'; // 원하는 색상으로 변경
+        });
+
+        navbarLeft.addEventListener('mouseout', function() {
+            navbarLeft.style.color = ''; // 마우스를 떼면 원래 색상으로 돌아감
+        });
+
+        navbarLeft.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+    });
+
+
+    // 토큰체크
+    function handleLinkClick(link) {
+        var token = Cookies.get('Authorization');
+
+        if (token) {
+            window.location.href = link;
+        } else {
+            showLoginConfirmation();
+        }
+    }
+
+    // 로그인 요청, 이동
+    function showLoginConfirmation() {
+        if (confirm("로그인이 필요합니다. 로그인 하시겠습니까?")) {
+            window.location.href = '/api/view/login';
+        }
+    }
+
+
+</script>
