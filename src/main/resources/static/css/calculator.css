@@ -144,7 +144,7 @@
     border: 1px solid #ccc; /* 대화 상자 테두리 설정 */
     height: 300px; /* 대화 상자 높이 설정 */
     overflow-y: scroll; /* 내용이 넘칠 경우 스크롤 표시 */
-    margin-bottom: 20px; /* 대화 상자와 입력창 사이 간격 */
+    margin-bottom: 10px; /* 대화 상자와 입력창 사이 간격 */
     padding: 10px; /* 내부 여백 설정 */
 }
 
