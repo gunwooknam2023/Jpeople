@@ -35,11 +35,15 @@
     </div>
 </div>
 
-<button onclick="saveImage()">저장</button>
 
-<canvas id="drawing-board" width="1800" height="800"></canvas>
-
-
+<div style="display: flex; justify-content: space-between; padding-top: 50px; padding-left: 50px">
+    <canvas id="drawing-board" width="1600" height="700"></canvas>
+    <div style="padding-right: 50px">
+        <button type="button" class="btn btn-secondary" onclick="clearCanvas()">초 기 화</button>
+        <hr/>
+        <button type="button" class="btn btn-primary" onclick="saveImage()">그림 저장</button>
+    </div>
+</div>
 <!-- 하단바 -->
 <div class="footer">
     대표: 남건욱
@@ -97,6 +101,13 @@
         link.href = image;
         link.download = 'my_drawing.png'; // 저장될 이미지 파일의 이름을 설정합니다.
         link.click();
+    }
+
+    // 캔버스를 초기화하는 함수
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 전체를 지웁니다.
+        ctx.fillStyle = '#ffffff'; // 흰색 배경으로 다시 설정합니다.
+        ctx.fillRect(0, 0, canvas.width, canvas.height); // 캔버스를 흰색으로 채웁니다.
     }
 
     document.addEventListener('DOMContentLoaded', function() {
