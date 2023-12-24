@@ -28,6 +28,15 @@
   </div>
 </div>
 
+<div class="conversation-container" id="conversationContainer" style="height: 500px; width: 1500px; border: 1px solid #ccc; overflow-y: scroll;">
+  <div class="conversation-box" id="conversationBox"></div>
+</div>
+<div class="user-input">
+  <input type="text" id="userInput" placeholder="메시지를 입력하세요">
+  <button onclick="sendMessage()">전송</button>
+</div>
+
+
 <!-- 하단바 -->
 <div class="footer">
   대표: 남건욱
@@ -36,11 +45,32 @@
 
 
 <script>
+  function sendMessage() {
+    const userInput = document.getElementById('userInput').value;
+    const conversationBox = document.getElementById('conversationBox');
+
+    // 사용자 입력 요소 추가
+    const userMessage = document.createElement('p');
+    userMessage.innerHTML = `<strong>사용자:</strong> ${userInput}`;
+    conversationBox.appendChild(userMessage);
+
+    // GPT 모델의 답변을 대신하여 임시적인 답변을 생성함
+    const gptResponse = document.createElement('p');
+    gptResponse.innerHTML = '<strong>ChatGPT:</strong> GPT의 답변이 여기에 들어갑니다.';
+    conversationBox.appendChild(gptResponse);
+
+    // 사용자 입력창 초기화
+    document.getElementById('userInput').value = '';
+
+    // 스크롤을 아래로 이동하여 최신 대화 보여주기
+    conversationBox.scrollTop = conversationBox.scrollHeight;
+  }
 
   document.addEventListener('DOMContentLoaded', function() {
     const navbarLeft = document.querySelector('.navbar-left');
     const loginButton = document.querySelector('.login-button');
     const logoutButton = document.querySelector('.logout-button');
+
 
     // checkCookie() 함수 추가
     function checkCookie() {
