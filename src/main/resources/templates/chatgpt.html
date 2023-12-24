@@ -28,11 +28,11 @@
   </div>
 </div>
 
-<div class="conversation-container" id="conversationContainer" style="height: 500px; width: 1500px; border: 1px solid #ccc; overflow-y: scroll;">
+<div class="conversation-container" id="conversationContainer" style="height: 600px; width: 1500px; border: 1px solid #ccc; overflow-y: scroll; margin-left:200px; margin-top: 50px">
   <div class="conversation-box" id="conversationBox"></div>
 </div>
-<div class="user-input">
-  <input type="text" id="userInput" placeholder="메시지를 입력하세요">
+<div class="user-input" style="margin-left: 550px;">
+  <input type="text" id="userInput" placeholder="메시지를 입력하세요" style="width: 800px; margin-top: 30px">
   <button onclick="sendMessage()">전송</button>
 </div>
 
@@ -45,6 +45,14 @@
 
 
 <script>
+
+  // 엔터 키를 눌렀을 때 sendMessage 함수 호출
+  document.getElementById('userInput').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
+  });
+
   function sendMessage() {
     const userInput = document.getElementById('userInput').value;
     const conversationBox = document.getElementById('conversationBox');
