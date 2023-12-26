@@ -29,6 +29,9 @@ public class User {
     @Column(name = "introduction")
     private String introduction;
 
+    @Column(name = "profile_url")
+    private String profileUrl = "/images/logo.png";
+
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
@@ -73,6 +76,10 @@ public class User {
     public User naverIdUpdate(String naverId){
         this.naverId = naverId;
         return this;
+    }
+
+    public void setProfileUrl(String profileUrl){
+        this.profileUrl = profileUrl;
     }
 
 }
