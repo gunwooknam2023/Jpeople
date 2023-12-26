@@ -4,14 +4,16 @@ import com.gunwook.jpeople.comment.dto.CommentResponseDto;
 import com.gunwook.jpeople.mypage.dto.ProfileResponseDto;
 import com.gunwook.jpeople.mypage.service.MyPageService;
 import com.gunwook.jpeople.post.dto.PostResponseDto;
+import com.gunwook.jpeople.post.service.S3Uploader;
 import com.gunwook.jpeople.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,6 +21,20 @@ import java.util.List;
 @RequestMapping("/api")
 public class MypageController {
     private final MyPageService myPageService;
+    private final S3Uploader s3Uploader;
+
+    @PostMapping("/mypage/profile/upload")
+    public ResponseEntity<String> uploadProfileImage(@RequestParam("profileimage")MultipartFile file,
+                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        String result = myPageService.uploadProfileImage(file, userDetails.getUser());
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/mypage/profile/delete")
+    public ResponseEntity<String> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        String result = myPageService.deleteProfileImage(userDetails.getUser());
+        return ResponseEntity.ok(result);
+    }
 
     /**
      * 프로필 조회
