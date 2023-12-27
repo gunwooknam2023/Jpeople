@@ -296,26 +296,6 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const post_id = urlParams.get('id');
-
-
-        fetch(`/api/posts/${post_id}`)
-            .then(response => response.json())
-            .then(postInfo => {
-                // 이전 코드...
-
-                // 가져온 댓글 정보를 화면에 표시
-                const commentList = postInfo.commentResponseDtoList.reverse();
-                const commentContainer = document.querySelector('.comment > div');
-
-                commentList.forEach(comment => {
-                    addCommentToDOM(comment);
-                });
-            })
-            .catch(error => console.error('Error fetching post:', error));
-    });
     function commentCheck(commentId) {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', `/api/comment/${commentId}/user`, false);  // Using synchronous request for simplicity, consider using asynchronous in a real application
