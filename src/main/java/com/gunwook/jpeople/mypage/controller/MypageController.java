@@ -1,6 +1,7 @@
 package com.gunwook.jpeople.mypage.controller;
 
 import com.gunwook.jpeople.comment.dto.CommentResponseDto;
+import com.gunwook.jpeople.mypage.dto.ProfileModifyRequestDto;
 import com.gunwook.jpeople.mypage.dto.ProfileResponseDto;
 import com.gunwook.jpeople.mypage.service.MyPageService;
 import com.gunwook.jpeople.post.dto.PostResponseDto;
@@ -22,6 +23,19 @@ import java.util.List;
 public class MypageController {
     private final MyPageService myPageService;
     private final S3Uploader s3Uploader;
+
+    /**
+     * 닉네임, 자기소개 변경
+     * @param userDetails 로그인 정보
+     * @param profileModifyRequestDto 수정 정보
+     * @return 결과 반환
+     */
+    @PutMapping("/mypage/profile/introduction")
+    public ResponseEntity<String> introductionModify(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                     @RequestBody ProfileModifyRequestDto profileModifyRequestDto){
+        String result = myPageService.introductionModify(userDetails.getUser(), profileModifyRequestDto);
+        return ResponseEntity.ok(result);
+    }
 
     /**
      * 프로필 사진 업로드(변경)

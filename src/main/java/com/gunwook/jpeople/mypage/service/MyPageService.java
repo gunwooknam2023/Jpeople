@@ -3,6 +3,7 @@ package com.gunwook.jpeople.mypage.service;
 import com.gunwook.jpeople.comment.dto.CommentResponseDto;
 import com.gunwook.jpeople.comment.entity.Comment;
 import com.gunwook.jpeople.comment.repository.CommentRepository;
+import com.gunwook.jpeople.mypage.dto.ProfileModifyRequestDto;
 import com.gunwook.jpeople.mypage.dto.ProfileResponseDto;
 import com.gunwook.jpeople.post.dto.PostResponseDto;
 import com.gunwook.jpeople.post.entity.Category;
@@ -31,6 +32,15 @@ public class MyPageService {
     private final CommentRepository commentRepository;
     private final S3Uploader s3Uploader;
 
+    @Transactional
+    public String introductionModify(User user, ProfileModifyRequestDto profileModifyRequestDto) {
+        User requestUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 후 사용하세요.")
+        );
+
+        requestUser.updateIntroduction(profileModifyRequestDto);
+        return "프로필 변경이 완료되었습니다.";
+    }
 
     @Transactional
     public String uploadProfileImage(MultipartFile file, User user) throws IOException {
