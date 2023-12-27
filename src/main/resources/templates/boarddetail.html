@@ -359,10 +359,11 @@
             </div>
             ` : ''}
             <div style="text-align: left; padding-left: 20px;">
-                <span style="font-weight: bold">${comment.nickname}</span><br>
-                <span>${timeAgoString}</span><br>
+                <img class="profile-image" src="${comment.profile_url}" alt="프로필 사진" style="width: 27px; height: 22px; margin-right: 5px;">
+                <span style="font-weight: bold; font-size:27px;">${comment.nickname}</span><br>
+                <span style="font-size: 15px;">${timeAgoString}</span><br>
             </div>
-            <div style="display: flex; align-items: center; text-align: left; padding-left: 20px;">
+            <div style="display: flex; align-items: center; text-align: left; padding-left: 20px; font-size: 18px;">
                 <span>${comment.contents}</span>
                 <div style="display: flex; align-items: center;">
                     <img src="/images/like.png" alt="like icon" style="width: 30px; height: 30px; cursor: pointer;" onclick="likeComment(${comment.id})">

@@ -15,6 +15,7 @@ public class CommentResponseDto {
     private String title;
     private Long user_id;
     private String username;
+    private String profile_url;
     private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -27,6 +28,7 @@ public class CommentResponseDto {
         this.title = comment.getPost().getTitle();
         this.user_id = comment.getUser().getId();
         this.username = comment.getUser().getUsername();
+        this.profile_url = comment.getUser().getProfileUrl();
         this.nickname = comment.getUser().getNickname();
         this.like = comment.getGoodLike();
         this.createdAt = comment.getCreatedAt();
