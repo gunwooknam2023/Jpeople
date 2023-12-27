@@ -23,6 +23,13 @@ public class MypageController {
     private final MyPageService myPageService;
     private final S3Uploader s3Uploader;
 
+    /**
+     * 프로필 사진 업로드(변경)
+     * @param file 이미지 파일
+     * @param userDetails 로그인 정보
+     * @return 결과 반환
+     * @throws IOException
+     */
     @PostMapping("/mypage/profile/upload")
     public ResponseEntity<String> uploadProfileImage(@RequestParam("profileimage")MultipartFile file,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
@@ -30,6 +37,11 @@ public class MypageController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * 프로필 사진 제거(기본 이미지로 변경)
+     * @param userDetails 로그인 정보
+     * @return 결과 반환
+     */
     @DeleteMapping("/mypage/profile/delete")
     public ResponseEntity<String> deleteProfileImage(@AuthenticationPrincipal UserDetailsImpl userDetails){
         String result = myPageService.deleteProfileImage(userDetails.getUser());

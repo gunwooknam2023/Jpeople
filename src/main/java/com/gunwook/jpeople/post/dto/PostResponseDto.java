@@ -17,6 +17,7 @@ public class PostResponseDto {
     private String contents;
     private Long user_id;
     private String username;
+    private String profile_url;
     private String nickname;
     private Long goodLike;
     private Long viewCnt;
@@ -33,6 +34,7 @@ public class PostResponseDto {
         this.contents = post.getContents();
         this.user_id = post.getUser().getId();
         this.username = post.getUser().getUsername();
+        this.profile_url = post.getUser().getProfileUrl();
         this.nickname = post.getUser().getNickname();
         this.goodLike = post.getGoodLike();
         this.viewCnt = post.getViewCnt();

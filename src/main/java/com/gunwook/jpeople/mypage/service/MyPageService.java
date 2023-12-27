@@ -31,13 +31,7 @@ public class MyPageService {
     private final CommentRepository commentRepository;
     private final S3Uploader s3Uploader;
 
-    /**
-     * 프로필 사진 업로드(변경)
-     * @param file 이미지 파일
-     * @param user 로그인 정보
-     * @return 결과 반환
-     * @throws IOException
-     */
+
     @Transactional
     public String uploadProfileImage(MultipartFile file, User user) throws IOException {
         User requestUser = userRepository.findById(user.getId()).orElseThrow(
@@ -50,11 +44,7 @@ public class MyPageService {
         return "프로필 사진 업로드에 성공하였습니다.";
     }
 
-    /**
-     * 프로필 사진 제거(기본 이미지로 변경)
-     * @param user 로그인 정보
-     * @return 결과 반환
-     */
+
     @Transactional
     public String deleteProfileImage(User user) {
         User requestUser = userRepository.findById(user.getId()).orElseThrow(
