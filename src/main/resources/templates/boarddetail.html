@@ -296,6 +296,7 @@
         }
     }
 
+
     function commentCheck(commentId) {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', `/api/comment/${commentId}/user`, false);  // Using synchronous request for simplicity, consider using asynchronous in a real application
@@ -522,6 +523,14 @@
                 document.getElementById('contentss').textContent = postInfo.contents;
                 document.getElementById('viewCnts').textContent = postInfo.viewCnt;
                 document.getElementById('goodLikes').textContent = postInfo.goodLike;
+
+                // 가져온 댓글 정보를 화면에 표시
+                const commentList = postInfo.commentResponseDtoList.reverse();
+                const commentContainer = document.querySelector('.comment > div');
+
+                commentList.forEach(comment => {
+                    addCommentToDOM(comment);
+                });
             })
             .catch(error => console.error('Error fetching post:', error));
     });
