@@ -43,7 +43,10 @@
     </div>
 
     <div style="text-align: right; padding-right: 15px">
+        <div>
+        <img alt="profile-url" id="profile-url" style="width: 32px; height: 27px; margin-right: 5px;">
         <span id="nicknames" style="font-weight: bold"></span><br>
+        </div>
         <span id="createdAts"></span>
     </div>
 
@@ -531,6 +534,7 @@
                 const formattedDateTime = `${date} ${time}`;
 
                 // 가져온 게시글 정보를 화면에 표시
+                document.getElementById('profile-url').src = postInfo.profile_url;
                 document.getElementById('nicknames').textContent = postInfo.nickname;
                 document.getElementById('createdAts').textContent = formattedDateTime;
                 document.getElementById('titles').textContent = postInfo.title;
