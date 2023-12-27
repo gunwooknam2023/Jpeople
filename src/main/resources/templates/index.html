@@ -412,6 +412,16 @@
                     postTime.classList.add('info-item', 'post-time');
                     postTime.textContent = getTimeAgoString(post.createdAt); // created_at은 게시물 작성 시간 정보입니다.
 
+                    const profileImage = document.createElement('img');
+                    profileImage.classList.add('profile-image');
+                    profileImage.src = post.profile_url; // 프로필 이미지 URL 설정
+                    profileImage.alt = '프로필 사진';
+                    profileImage.style.width = '27px';
+                    profileImage.style.height = '25px';
+                    profileImage.style.borderRadius = '50%';
+                    profileImage.style.marginRight = '5px';
+
+                    nickname.insertBefore(profileImage, nickname.firstChild);
 
                     postInfo.appendChild(postTitle);
                     postInfo.appendChild(nickname);
@@ -459,6 +469,19 @@
                     const postTime = document.createElement('span');
                     postTime.classList.add('info-item', 'post-time');
                     postTime.textContent = getTimeAgoString(post.createdAt); // created_at은 게시물 작성 시간 정보입니다.
+
+                    // 게시물 작성자 프로필 이미지 생성
+                    const profileImage = document.createElement('img');
+                    profileImage.classList.add('profile-image');
+                    profileImage.src = post.profile_url; // 프로필 이미지 URL 설정
+                    profileImage.alt = '프로필 사진';
+                    profileImage.style.width = '27px';
+                    profileImage.style.height = '25px';
+                    profileImage.style.borderRadius = '50%';
+                    profileImage.style.marginRight = '5px';
+
+
+                    nickname.insertBefore(profileImage, nickname.firstChild);
 
 
                     postInfo.appendChild(postTitle);
