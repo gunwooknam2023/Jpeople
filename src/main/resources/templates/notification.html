@@ -232,7 +232,10 @@
                                 <a href="/api/view/boarddetail?id=${post.id}">${truncatedTitle}</a>
                                 ${commentCount > 0 ? `[<strong>${commentCount}</strong>]` : ''} <!-- 수정된 부분: 댓글 수가 0보다 큰 경우에만 표시 -->
                             </span>
+                            <div>
+                             <img class="profile-image" src="${post.profile_url}" alt="프로필 사진" style="width: 32px; height: 22px; margin-right: 5px;">
                             <span class="info-item post-nickname">${post.nickname}</span>
+                            </div>
                             <span class="info-item post-time">${timeAgoString}</span>
                         </div>
         `;
