@@ -1,5 +1,6 @@
 package com.gunwook.jpeople.user.entity;
 
+import com.gunwook.jpeople.mypage.dto.ProfileModifyRequestDto;
 import com.gunwook.jpeople.user.dto.OauthUserDto;
 import com.gunwook.jpeople.user.dto.SignUpRequestDto;
 import jakarta.persistence.*;
@@ -80,6 +81,11 @@ public class User {
 
     public void setProfileUrl(String profileUrl){
         this.profileUrl = profileUrl;
+    }
+
+    public void updateIntroduction(ProfileModifyRequestDto profileModifyRequestDto){
+        this.nickname = profileModifyRequestDto.getNickname();
+        this.introduction = profileModifyRequestDto.getIntroduction();
     }
 
 }
