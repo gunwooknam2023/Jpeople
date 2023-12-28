@@ -3,7 +3,6 @@ package com.gunwook.jpeople.alarm.controller;
 import com.gunwook.jpeople.alarm.dto.AlarmResponseDto;
 import com.gunwook.jpeople.alarm.service.AlarmService;
 import com.gunwook.jpeople.security.UserDetailsImpl;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +16,11 @@ import java.util.List;
 @RequestMapping("/api")
 public class AlarmController {
     private final AlarmService alarmService;
+
+    @GetMapping("/alarm/userid")
+    public Long userid(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return alarmService.userid(userDetails.getUser());
+    }
 
     /**
      * 알림을 받기 위한 SSE (Server-Sent Events) 생성
