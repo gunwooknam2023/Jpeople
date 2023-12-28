@@ -25,6 +25,10 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
     private final UserRepository userRepository;
 
+    public Long userid(User user) {
+        return user.getId();
+    }
+
     // 사용자 ID를 키로 가지는 SSEEmitter 저장소
     private final Map<Long, List<SseEmitter>> sseEmitterMap = new ConcurrentHashMap<>();
 
@@ -109,6 +113,4 @@ public class AlarmService {
 
         return "모든 알림이 읽음 처리 되었습니다.";
     }
-
-
 }
