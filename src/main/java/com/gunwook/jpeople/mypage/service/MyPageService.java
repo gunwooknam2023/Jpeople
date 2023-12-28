@@ -3,8 +3,9 @@ package com.gunwook.jpeople.mypage.service;
 import com.gunwook.jpeople.comment.dto.CommentResponseDto;
 import com.gunwook.jpeople.comment.entity.Comment;
 import com.gunwook.jpeople.comment.repository.CommentRepository;
-import com.gunwook.jpeople.mypage.dto.ProfileModifyRequestDto;
 import com.gunwook.jpeople.mypage.dto.ProfileResponseDto;
+import com.gunwook.jpeople.mypage.dto.UpdateIntroduction;
+import com.gunwook.jpeople.mypage.dto.UpdateNickname;
 import com.gunwook.jpeople.post.dto.PostResponseDto;
 import com.gunwook.jpeople.post.entity.Category;
 import com.gunwook.jpeople.post.entity.Post;
@@ -14,8 +15,6 @@ import com.gunwook.jpeople.user.entity.User;
 import com.gunwook.jpeople.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,14 +31,25 @@ public class MyPageService {
     private final CommentRepository commentRepository;
     private final S3Uploader s3Uploader;
 
+
     @Transactional
-    public String introductionModify(User user, ProfileModifyRequestDto profileModifyRequestDto) {
+    public String updateNickname(User user, UpdateNickname nickname){
         User requestUser = userRepository.findById(user.getId()).orElseThrow(
                 () -> new IllegalArgumentException("로그인 후 사용하세요.")
         );
 
-        requestUser.updateIntroduction(profileModifyRequestDto);
-        return "프로필 변경이 완료되었습니다.";
+        requestUser.updateNickname(nickname.getNickname());
+        return "닉네임이 변경되었습니다.";
+    }
+
+    @Transactional
+    public String updateIntroduction(User user, UpdateIntroduction introduction) {
+        User requestUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("로그인 후 사용하세요.")
+        );
+
+        requestUser.updateIntroduction(introduction.getIntroduction());
+        return "자기소개가 변경되었습니다.";
     }
 
     @Transactional

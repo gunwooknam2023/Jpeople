@@ -1,14 +1,15 @@
 package com.gunwook.jpeople.mypage.controller;
 
 import com.gunwook.jpeople.comment.dto.CommentResponseDto;
-import com.gunwook.jpeople.mypage.dto.ProfileModifyRequestDto;
 import com.gunwook.jpeople.mypage.dto.ProfileResponseDto;
+import com.gunwook.jpeople.mypage.dto.UpdateIntroduction;
+import com.gunwook.jpeople.mypage.dto.UpdateNickname;
 import com.gunwook.jpeople.mypage.service.MyPageService;
 import com.gunwook.jpeople.post.dto.PostResponseDto;
 import com.gunwook.jpeople.post.service.S3Uploader;
 import com.gunwook.jpeople.security.UserDetailsImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,18 +23,30 @@ import java.util.List;
 @RequestMapping("/api")
 public class MypageController {
     private final MyPageService myPageService;
-    private final S3Uploader s3Uploader;
 
     /**
-     * 닉네임, 자기소개 변경
+     * 닉네임 변경
      * @param userDetails 로그인 정보
-     * @param profileModifyRequestDto 수정 정보
-     * @return 결과 반환
+     * @param nickname 변경할 닉네임
+     * @return 성공/실패 여부
+     */
+    @PutMapping("/mypage/profile/nickname")
+    public ResponseEntity<String> updateNickname(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                 @Valid @RequestBody UpdateNickname nickname){
+        String result = myPageService.updateNickname(userDetails.getUser(), nickname);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 자기소개 변경
+     * @param userDetails 로그인 정보
+     * @param introduction 변경할 자기소개
+     * @return 성공/실패 여부
      */
     @PutMapping("/mypage/profile/introduction")
-    public ResponseEntity<String> introductionModify(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                     @RequestBody ProfileModifyRequestDto profileModifyRequestDto){
-        String result = myPageService.introductionModify(userDetails.getUser(), profileModifyRequestDto);
+    public ResponseEntity<String> updateIntroduction(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                 @Valid @RequestBody UpdateIntroduction introduction){
+        String result = myPageService.updateIntroduction(userDetails.getUser(), introduction);
         return ResponseEntity.ok(result);
     }
 
