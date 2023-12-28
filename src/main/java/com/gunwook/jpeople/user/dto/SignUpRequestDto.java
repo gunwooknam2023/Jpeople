@@ -1,6 +1,7 @@
 package com.gunwook.jpeople.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,9 +17,11 @@ public class SignUpRequestDto {
     private String password;
 
     @NotBlank(message =  "닉네임을 입력해주세요.")
+    @Size(max=7)
     private String nickname;
 
     @NotBlank(message =  "자기소개를 입력해주세요.")
+    @Size(max=20)
     private String introduction;
 
     private boolean admin;
