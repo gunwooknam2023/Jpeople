@@ -74,4 +74,14 @@ public class ViewController {
     public String paintboard(){
         return "paintboard";
     }
+
+    @GetMapping("/weather")
+    public String weather(){
+        return "weather";
+    }
+
+    @GetMapping("/notepad")
+    public String notepad(){
+        return "notepad";
+    }
 }
