@@ -97,3 +97,19 @@
     height: 40px; /* 원하는 크기로 조절하세요 */
     margin-right: 2px; /* 아이콘과 텍스트 사이의 간격 조절 */
 }
+
+.weather-icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    border: 2px solid #000;
+    margin: 20px auto;
+}
+
+.weather-icon {
+    width: 70px;
+    height: 70px;
+}
