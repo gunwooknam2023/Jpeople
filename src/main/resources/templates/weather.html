@@ -35,35 +35,54 @@
   </div>
 </div>
 
-<div class="weather-info">
-  <h2>날씨 정보</h2>
-  <p id="weather-description"></p>
-  <p id="temperature"></p>
 
-  <!-- 지역 선택을 위한 버튼과 리스트 -->
-  <button onclick="toggleLocationList()">지역 선택 &#9660;</button>
-  <ul id="location-list" style="display: none;">
-    <li><button onclick="changeLocation('Seoul')">서울</button></li>
-    <li><button onclick="changeLocation('Suwon')">경기도 수원</button></li>
-    <li><button onclick="changeLocation('Yongin')">경기도 용인</button></li>
-    <li><button onclick="changeLocation('Sejong')">세종</button></li>
-    <li><button onclick="changeLocation('Sokcho')">강원도 속초</button></li>
-    <li><button onclick="changeLocation('Gangneung')">강원도 강릉</button></li>
-    <li><button onclick="changeLocation('ChunCheon')">강원도 춘천</button></li>
-    <li><button onclick="changeLocation('inchon')">인천</button></li>
-    <li><button onclick="changeLocation('Daejeon')">대전</button></li>
-    <li><button onclick="changeLocation('Iksan')">익산</button></li>
-    <li><button onclick="changeLocation('Gunsan')">군산</button></li>
-    <li><button onclick="changeLocation('Jeonju')">전주</button></li>
-    <li><button onclick="changeLocation('Mokpo')">목포</button></li>
-    <li><button onclick="changeLocation('gwangju')">광주광역시</button></li>
-    <li><button onclick="changeLocation('daegu')">대구</button></li>
-    <li><button onclick="changeLocation('busan')">부산</button></li>
-    <li><button onclick="changeLocation('Ulsan')">울산</button></li>
-    <li><button onclick="changeLocation('Pohang')">포항</button></li>
-    <!-- 필요한 만큼 다른 도시를 추가할 수 있습니다 -->
-  </ul>
+
+
+<div style="display: flex; justify-content: center; margin-top: 30px;">
+  <div style="border: 2px solid #000; padding: 20px;">
+    <div class="weather-info">
+      <h2 style="font-weight: bold; font-size: 40px;">날씨 정보</h2>
+      <p id="current-location" style="font-size: 25px;"></p>
+      <p id="weather-description" style="font-size: 25px;"></p>
+      <div class="weather-icon-container">
+        <img id="weather-icon" src="" alt="weather icon" class="weather-icon">
+      </div>
+      <p id="temperature" style="font-size: 25px;"></p>
+      <p id="minTemperature" style="font-size: 25px;"></p>
+      <p id="maxTemperature" style="font-size: 25px;"></p>
+    </div>
+  </div>
 </div>
+
+    <div>
+    <button onclick="toggleLocationList()" style="font-size: 25px; font-weight: bold"> 지역 선택 &#9660;</button>
+    <ul id="location-list" style="display: none; list-style-type: none;">
+      <li><button onclick="changeLocation('Seoul')" style="font-weight: bold;">서울</button></li>
+      <li><button onclick="changeLocation('Suwon')" style="font-weight: bold;">경기도 수원</button></li>
+      <li><button onclick="changeLocation('Yongin')" style="font-weight: bold;">경기도 용인</button></li>
+      <li><button onclick="changeLocation('Sejong')" style="font-weight: bold;">세종</button></li>
+      <li><button onclick="changeLocation('Sokcho')" style="font-weight: bold;">강원도 속초</button></li>
+      <li><button onclick="changeLocation('Gangneung')" style="font-weight: bold;">강원도 강릉</button></li>
+      <li><button onclick="changeLocation('ChunCheon')" style="font-weight: bold;">강원도 춘천</button></li>
+      <li><button onclick="changeLocation('Inchon')" style="font-weight: bold;">인천</button></li>
+      <li><button onclick="changeLocation('Daejeon')" style="font-weight: bold;">대전</button></li>
+      <li><button onclick="changeLocation('Iksan')" style="font-weight: bold;">익산</button></li>
+      <li><button onclick="changeLocation('Gunsan')" style="font-weight: bold;">군산</button></li>
+      <li><button onclick="changeLocation('Jeonju')" style="font-weight: bold;">전주</button></li>
+      <li><button onclick="changeLocation('Mokpo')" style="font-weight: bold;">목포</button></li>
+      <li><button onclick="changeLocation('Gwangju')" style="font-weight: bold;">광주광역시</button></li>
+      <li><button onclick="changeLocation('Daegu')" style="font-weight: bold;">대구</button></li>
+      <li><button onclick="changeLocation('Busan')" style="font-weight: bold;">부산</button></li>
+      <li><button onclick="changeLocation('Ulsan')" style="font-weight: bold;">울산</button></li>
+      <li><button onclick="changeLocation('Pohang')" style="font-weight: bold;">포항</button></li>
+      <!-- 필요한 만큼 다른 도시를 추가할 수 있습니다 -->
+    </ul>
+    </div>
+
+
+
+
+
 
 <!-- 하단바 -->
 <div class="footer">
@@ -92,9 +111,17 @@
       const response = await fetch(getWeatherUrl(city));
       const data = await response.json();
 
+      const iconCode = data.weather[0].icon;
+      const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
+
       // 선택한 도시의 날씨 정보를 HTML에 삽입
+      const locationName = getLocationName(city); // 도시명을 한국어로 바꾸기 위한 함수 호출
+      document.getElementById('current-location').innerText = `지역: ${locationName}`; // 이 부분이 추가된 부분입니다.
       document.getElementById('weather-description').innerText = `날씨: ${data.weather[0].description}`;
-      document.getElementById('temperature').innerText = `온도: ${data.main.temp}°C`;
+      document.getElementById('weather-icon').src = iconUrl;
+      document.getElementById('temperature').innerText = `현재온도: ${data.main.temp}°C`;
+      document.getElementById('minTemperature').innerText = `최저온도: ${data.main.temp_min}°C`;
+      document.getElementById('maxTemperature').innerText = `최고온도: ${data.main.temp_max}°C`;
 
       currentCity = city; // 현재 도시 변경
       toggleLocationList(); // 리스트 숨기기
@@ -109,13 +136,65 @@
       const response = await fetch(getWeatherUrl(currentCity));
       const data = await response.json();
 
+      const iconCode = data.weather[0].icon;
+      const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
+
       // 서울의 날씨 정보를 HTML에 삽입
+      document.getElementById('current-location').innerText = `지역: 서울`; // 이 부분이 추가된 부분입니다.
       document.getElementById('weather-description').innerText = `날씨: ${data.weather[0].description}`;
-      document.getElementById('temperature').innerText = `온도: ${data.main.temp}°C`;
+      document.getElementById('weather-icon').src = iconUrl;
+      document.getElementById('temperature').innerText = `현재온도: ${data.main.temp}°C`;
+      document.getElementById('minTemperature').innerText = `최저온도: ${data.main.temp_min}°C`;
+      document.getElementById('maxTemperature').innerText = `최고온도: ${data.main.temp_max}°C`;
     } catch (error) {
       console.error('날씨 정보를 가져오는 데 실패했습니다.', error);
     }
   };
+
+  // 도시명을 한국어로 변환하는 함수 (원하는 도시명 추가)
+  function getLocationName(city) {
+    switch (city) {
+      case 'Seoul':
+        return '서울';
+      case 'Suwon':
+        return '경기도 수원';
+      case 'Yongin':
+        return '경기도 용인';
+      case 'Sejong':
+        return '세종';
+      case 'Sokcho':
+        return '강원도 속초';
+      case 'Gangneung':
+        return '강원도 강릉';
+      case 'ChunCheon':
+        return '강원도 춘천';
+      case 'Inchon':
+        return '인천';
+      case 'Daejeon':
+        return '대전';
+      case 'Iksan':
+        return '익산';
+      case 'Gunsan':
+        return '군산';
+      case 'Jeonju':
+        return '전주';
+      case 'Mokpo':
+        return '목포';
+      case 'Gwangju':
+        return '광주광역시';
+      case 'Daegu':
+        return '대구';
+      case 'Busan':
+        return '부산';
+      case 'Ulsan':
+        return '울산';
+      case 'Pohang':
+        return '포항';
+      default:
+        return city;
+    }
+  }
+
 
 
   document.addEventListener('DOMContentLoaded', function() {
