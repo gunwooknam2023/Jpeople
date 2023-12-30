@@ -64,6 +64,9 @@
         </div>
     </div>
 </div>
+<div style="display: flex; justify-content: center; align-items: center;">
+    <button id="reloadButton" style="font-weight: bold">그래프 갱신</button>
+</div>
 
 
 <div class="cardcontainer">
@@ -167,10 +170,13 @@
 </div>
 
 <script>
+    document.getElementById('reloadButton').addEventListener('click', function() {
+        location.reload(true); // F5 효과를 주어 페이지를 새로고침합니다.
+    });
 
     function closeModalAndReload() {
-        location.reload();
         getScheduleManagerData();
+        location.reload(true);
     }
 
 
